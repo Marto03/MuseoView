@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MuseoViewUI.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MuseoViewUI"
+    xmlns:vm="clr-namespace:MuseoViewUI.ViewModels">
+
+    <Grid Padding="20">
+        <VerticalStackLayout>
+            <!--  Текстово поле за търсене  -->
+            <Entry
+                Placeholder="Въведете област..."
+                Text="{Binding SearchText, Mode=TwoWay}"
+                TextChanged="OnSearchTextChanged" />
+
+            <!--  Списък с предлаганите области  -->
+            <ListView
+                ItemSelected="OnRegionSelected"
+                ItemsSource="{Binding FilteredRegions}"
+                SelectedItem="{Binding SelectedRegion, Mode=TwoWay}"
+                SelectionMode="Single">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!--  Списък с музеите  -->
+            <ListView IsVisible="{Binding IsMuseumListVisible}" ItemsSource="{Binding Museums}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Detail="{Binding Location}" Text="{Binding Name}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

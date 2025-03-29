@@ -1,24 +1,16 @@
-﻿namespace MuseoView
+﻿using Microsoft.Maui.Maps;
+using Microsoft.Maui.Controls.Maps;
+namespace MuseoView
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
-
         public MainPage()
         {
             InitializeComponent();
-        }
 
-        private void OnCounterClicked(object sender, EventArgs e)
-        {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            // Задаване на начална област (карта на България)
+            var initialRegion = new MapSpan(new Location(42.6977, 23.3219), 1, 1); // София, България
+            mapView.MoveToRegion(initialRegion); // Премества картата до региона на България
         }
     }
 
