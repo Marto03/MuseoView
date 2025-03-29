@@ -7,7 +7,8 @@ namespace MuseoViewUI
 {
     public partial class App : Application
     {
-        public App(IServiceProvider serviceProvider)
+        private MuseumDatabase museumDatabaseService;
+        public App(IServiceProvider serviceProvider, MuseumDatabase museumDatabaseService)
         {
             InitializeComponent();
             //var builder = MauiApp.CreateBuilder();
@@ -19,13 +20,13 @@ namespace MuseoViewUI
 
             //DependencyService.Register<MuseumDatabase>();
             //DependencyService.Register<MuseumSearchViewModel>();
-
+            this.museumDatabaseService = museumDatabaseService;
             InitializeDatabase();
             MainPage = serviceProvider.GetRequiredService<MainPage>();
         }
         private async void InitializeDatabase()
         {
-            var museumDatabaseService = new MuseumDatabase(DatabaseConfig.DbPath);
+            //var museumDatabaseService = new MuseumDatabase(DatabaseConfig.DbPath);
             await museumDatabaseService.InitializeDatabaseAsync(); // Изчакваме създаването на таблиците и инициализацията на данните
         }
     }

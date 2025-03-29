@@ -10,6 +10,7 @@ namespace Database.Data
         public MuseumDatabase(string dbPath)
         {
             _database = new SQLiteAsyncConnection(dbPath);
+            DatabaseConfig.CopyDatabaseToDownloads();
             //CreateTablesAsync().Wait();
             //DatabaseSeeder.SeedAsync(_database).Wait(); // Инициализираме данните
             //InitializeDatabaseAsync(); // Извикваме асинхронния метод за инициализация
@@ -26,7 +27,6 @@ namespace Database.Data
                 _database.CreateTableAsync<CityModel>(),
                 _database.CreateTableAsync<MuseumModel>(),
                 _database.CreateTableAsync<RegionModel>(),
-                _database.CreateTableAsync<TypeMuseumModel>(),
                 _database.CreateTableAsync<MuseumImageModel>()
             };
 
