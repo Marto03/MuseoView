@@ -19,6 +19,16 @@ namespace MuseoViewUI
         {
 
         }
+
+        private void OnMuseumSearchTextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void OnSearchTypeChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 
 }

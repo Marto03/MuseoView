@@ -2,39 +2,112 @@
 <ContentPage
     x:Class="MuseoViewUI.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:MuseoViewUI"
-    xmlns:vm="clr-namespace:MuseoViewUI.ViewModels">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Grid Padding="20">
-        <VerticalStackLayout>
-            <!--  Текстово поле за търсене  -->
-            <Entry
-                Placeholder="Въведете област..."
-                Text="{Binding SearchText, Mode=TwoWay}"
-                TextChanged="OnSearchTextChanged" />
+    <!--  Абсолютен Layout за контрол върху позиционирането  -->
+    <AbsoluteLayout>
 
-            <!--  Списък с предлаганите области  -->
-            <ListView
-                ItemSelected="OnRegionSelected"
-                ItemsSource="{Binding FilteredRegions}"
-                SelectedItem="{Binding SelectedRegion, Mode=TwoWay}"
-                SelectionMode="Single">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <TextCell Text="{Binding}" />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+        <!--  Фоново изображение с адаптивно мащабиране  -->
+        <Image
+            x:Name="BackgroundImage"
+            AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+            AbsoluteLayout.LayoutFlags="All"
+            Aspect="Fill"
+            Source="background.png" />
 
-            <!--  Списък с музеите  -->
-            <ListView IsVisible="{Binding IsMuseumListVisible}" ItemsSource="{Binding Museums}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <TextCell Detail="{Binding Location}" Text="{Binding Name}" />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </VerticalStackLayout>
-    </Grid>
+        <!--  Основно съдържание  -->
+        <Grid
+            Padding="20"
+            AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+            AbsoluteLayout.LayoutFlags="All">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!--  Текст "Museo View" на два реда  -->
+            <StackLayout Grid.Row="0" HorizontalOptions="Center">
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="44"
+                    HorizontalTextAlignment="Center"
+                    Text="Museo"
+                    TextColor="SaddleBrown">
+                    <Label.Shadow>
+                        <Shadow
+                            Brush="Black"
+                            Opacity="0.7"
+                            Radius="5"
+                            Offset="4,4" />
+                    </Label.Shadow>
+                </Label>
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="44"
+                    HorizontalTextAlignment="Center"
+                    Text="View"
+                    TextColor="SaddleBrown">
+                    <Label.Shadow>
+                        <Shadow
+                            Brush="Black"
+                            Opacity="0.7"
+                            Radius="5"
+                            Offset="4,4" />
+                    </Label.Shadow>
+                </Label>
+            </StackLayout>
+
+            <!--  Търсачка с избор между "Област" и "Музей"  -->
+            <Frame
+                Grid.Row="1"
+                Margin="0,10"
+                Padding="10"
+                BackgroundColor="Transparent"
+                CornerRadius="15">
+                <VerticalStackLayout>
+                    <Picker Title="Избери какво да търсиш" SelectedIndexChanged="OnSearchTypeChanged">
+                        <Picker.Items>
+                            <x:String>Област</x:String>
+                            <x:String>Музей</x:String>
+                        </Picker.Items>
+                    </Picker>
+                    <Entry
+                        Margin="0,5"
+                        BackgroundColor="Transparent"
+                        FontSize="18"
+                        HeightRequest="40"
+                        Opacity="0.7"
+                        Placeholder="Търси..."
+                        Text="{Binding SearchText, Mode=TwoWay}"
+                        TextChanged="OnSearchTextChanged"
+                        TextColor="White" />
+
+                    <!--  Списък с резултати вътре в същия Frame  -->
+                    <ListView
+                        BackgroundColor="Transparent"
+                        ItemSelected="OnRegionSelected"
+                        ItemsSource="{Binding FilteredRegions}"
+                        MaximumHeightRequest="150"
+                        SelectedItem="{Binding SelectedRegion, Mode=TwoWay}"
+                        SelectionMode="Single">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Padding="5" BackgroundColor="Transparent">
+                                        <Label
+                                            FontSize="18"
+                                            Text="{Binding}"
+                                            TextColor="White" />
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </VerticalStackLayout>
+            </Frame>
+
+        </Grid>
+    </AbsoluteLayout>
 </ContentPage>

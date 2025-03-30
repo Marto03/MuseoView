@@ -10,7 +10,9 @@ namespace Database.Data
         public MuseumDatabase(string dbPath)
         {
             _database = new SQLiteAsyncConnection(dbPath);
-            DatabaseConfig.CopyDatabaseToDownloads();
+
+            //DatabaseConfig.CopyDatabaseToDownloads(); --- За копиране на базата в Downloads
+
             //CreateTablesAsync().Wait();
             //DatabaseSeeder.SeedAsync(_database).Wait(); // Инициализираме данните
             //InitializeDatabaseAsync(); // Извикваме асинхронния метод за инициализация
