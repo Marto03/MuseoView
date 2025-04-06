@@ -1,4 +1,5 @@
 ﻿using Database.Data.Initialize;
+using Database.DTOs;
 using Database.Models;
 using SQLite;
 namespace Database.Data
@@ -64,6 +65,24 @@ namespace Database.Data
                 .Where(m => m.Name == regionName) // Филтрираме по региона
                 .ToListAsync();
         }
+        public async Task<List<MuseumModel>> GetAllMuseumsAsync()
+        {
+            var museums = await _database.Table<MuseumModel>() // Филтрираме по региона
+                .ToListAsync();
+            return await _database.Table<MuseumModel>() // Филтрираме по региона
+                .ToListAsync();
+        }
+        public async Task<List<MuseumDTO>> GetAllMuseumNamesAsync()
+        {
+            var museums = await _database.Table<MuseumModel>().ToListAsync(); // Взимаме всички
+
+            return museums.Select(m => new MuseumDTO
+            {
+                Id = m.Id,
+                Name = m.Name
+            }).ToList();
+        }
+
         //public Task<List<MuseumModel>> GetMuseumsAsync()
         //{
         //    return _database.Table<MuseumModel>().ToListAsync();

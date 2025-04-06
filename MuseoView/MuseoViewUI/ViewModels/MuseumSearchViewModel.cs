@@ -1,17 +1,13 @@
-﻿using Database;
-using Database.Data;
+﻿using Database.Data;
+using Database.DTOs;
 using Database.Models;
 using MuseoViewUI.Commands;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
 
 namespace MuseoViewUI.ViewModels
 {
@@ -20,8 +16,10 @@ namespace MuseoViewUI.ViewModels
         private readonly MuseumDatabase museumDatabaseService;
         private string _searchText;
         private string _selectedRegion;
-        private ObservableCollection<string> _filteredRegions;
-        private ObservableCollection<MuseumModel> _museums;
+        private string _selectedSearchOption;
+        private ObservableCollection<string> _filteredResults;
+        private ObservableCollection<string> _regions;
+        private ObservableCollection<MuseumDTO> _museums;
         private bool _isMuseumListVisible;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -29,17 +27,51 @@ namespace MuseoViewUI.ViewModels
         public MuseumSearchViewModel(MuseumDatabase museumDatabaseService)
         {
             this.museumDatabaseService = museumDatabaseService;
-            _filteredRegions = new ObservableCollection<string>();
-            _museums = new ObservableCollection<MuseumModel>();
+            SearchOptions = new ObservableCollection<string> { "Област", "Музей" };
+            Regions = new ObservableCollection<string>();
+            Museums = new ObservableCollection<MuseumDTO>();
+            FilteredResults = new ObservableCollection<string>();
+
             SelectRegionCommand = new RelayCommand<string>(async region => await LoadMuseums(region));
-            IsMuseumListVisible = false; // Задаваме първоначално видимостта на списъка с музеи на "не".
-            //InitializeDatabaseAsync();
+            IsMuseumListVisible = false; // Първоначално списъкът с музеи не се вижда.
+
+            InitializeAsync(); // Fire and forget
         }
-        private async Task InitializeDatabaseAsync()
+
+        private async Task InitializeAsync()
         {
-            await museumDatabaseService.InitializeDatabaseAsync(); // Изчакваме създаването на таблиците и инициализацията на данните
-            LoadRegionsFromDatabaseAsync(); // Може да извикате друга логика след инициализацията
+            await LoadRegionsFromDatabaseAsync();
+            await LoadMuseums();
         }
+
+        public ObservableCollection<string> SearchOptions { get; set; }
+
+        public string SelectedSearchOption
+        {
+            get => _selectedSearchOption;
+            set
+            {
+                if (_selectedSearchOption != value)
+                {
+                    _selectedSearchOption = value;
+                    OnPropertyChanged();
+                    FilterResults();
+                }
+            }
+        }
+
+        public ObservableCollection<string> FilteredResults
+        {
+            get => _filteredResults;
+            set
+            {
+                _filteredResults = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string SelectedItem { get; set; }
+
         public string SearchText
         {
             get => _searchText;
@@ -49,28 +81,41 @@ namespace MuseoViewUI.ViewModels
                 {
                     _searchText = value;
                     OnPropertyChanged();
-                    LoadRegionsFromDatabaseAsync();
+                    FilterResults();
                 }
             }
         }
 
-        public ObservableCollection<string> FilteredRegions
+        public ObservableCollection<string> Regions
         {
-            get => _filteredRegions;
+            get => _regions;
             set
             {
-                _filteredRegions = value;
+                _regions = value;
                 OnPropertyChanged();
             }
         }
 
-        public ObservableCollection<MuseumModel> Museums
+        public ObservableCollection<MuseumDTO> Museums
         {
             get => _museums;
             set
             {
                 _museums = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public string SelectedRegion
+        {
+            get => _selectedRegion;
+            set
+            {
+                if (_selectedRegion != value)
+                {
+                    _selectedRegion = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -88,42 +133,38 @@ namespace MuseoViewUI.ViewModels
 
         private async Task LoadRegionsFromDatabaseAsync()
         {
-            if (string.IsNullOrWhiteSpace(SearchText))
-            {
-                FilteredRegions.Clear();
-                return;
-            }
-
             var allRegions = await museumDatabaseService.GetAllRegionsAsync();
-            var matchingRegions = allRegions
-                .Where(r => r.ToLower().Contains(SearchText.ToLower()))
-                .ToList();
-
-            FilteredRegions = new ObservableCollection<string>(matchingRegions);
+            Regions = new ObservableCollection<string>(allRegions);
+            FilterResults();
         }
 
-        private async Task LoadMuseums(string region)
+        private async Task LoadMuseums(string region = null)
         {
-            if (!string.IsNullOrEmpty(region))
+            if (string.IsNullOrEmpty(region))
             {
-                SelectedRegion = region;
-                IsMuseumListVisible = true; // Показваме списъка с музеи, когато е избрана област
-                var museums = await museumDatabaseService.GetMuseumsByRegionAsync(region);
-                Museums = new ObservableCollection<MuseumModel>(museums);
+                var allMuseums = await museumDatabaseService.GetAllMuseumNamesAsync();
+                Museums = new ObservableCollection<MuseumDTO>(allMuseums);
             }
+            else
+            {
+                var museums = await museumDatabaseService.GetAllMuseumNamesAsync();
+                Museums = new ObservableCollection<MuseumDTO>(museums);
+            }
+            FilterResults();
         }
 
-        public string SelectedRegion
+        private void FilterResults()
         {
-            get => _selectedRegion;
-            set
+            if (string.IsNullOrEmpty(SelectedSearchOption)) return;
+
+            IEnumerable<string> source = SelectedSearchOption == "Област" ? Regions : Museums.Select(m => m.Name);
+
+            if (!string.IsNullOrWhiteSpace(SearchText))
             {
-                if (_selectedRegion != value)
-                {
-                    _selectedRegion = value;
-                    OnPropertyChanged();
-                }
+                source = source.Where(x => x.ToLower().Contains(SearchText.ToLower()));
             }
+
+            FilteredResults = new ObservableCollection<string>(source.Take(50)); // Ограничаване на резултатите (по избор)
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

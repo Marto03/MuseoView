@@ -2,6 +2,7 @@
 using Database.Data;
 using Microsoft.Extensions.DependencyInjection;
 using MuseoViewUI.ViewModels;
+using MuseoViewUI.Views;
 
 namespace MuseoViewUI
 {
@@ -21,8 +22,9 @@ namespace MuseoViewUI
             //DependencyService.Register<MuseumDatabase>();
             //DependencyService.Register<MuseumSearchViewModel>();
             this.museumDatabaseService = museumDatabaseService;
-            InitializeDatabase();
             MainPage = serviceProvider.GetRequiredService<MainPage>();
+            MuseumsListView museumsListView = new MuseumsListView();
+            InitializeDatabase();
         }
         private async void InitializeDatabase()
         {

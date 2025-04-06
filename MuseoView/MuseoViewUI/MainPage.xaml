@@ -58,7 +58,7 @@
                     </Label.Shadow>
                 </Label>
             </StackLayout>
-
+            <!--<Label Text="{Binding OpenMuseumsCount}" />-->
             <!--  Търсачка с избор между "Област" и "Музей"  -->
             <Frame
                 Grid.Row="1"
@@ -67,12 +67,15 @@
                 BackgroundColor="Transparent"
                 CornerRadius="15">
                 <VerticalStackLayout>
-                    <Picker Title="Избери какво да търсиш" SelectedIndexChanged="OnSearchTypeChanged">
-                        <Picker.Items>
+                    <Picker
+                        Title="Избери какво да търсиш"
+                        ItemsSource="{Binding SearchOptions}"
+                        SelectedItem="{Binding SelectedSearchOption, Mode=TwoWay}" />
+                    <!--<Picker.Items>
                             <x:String>Област</x:String>
                             <x:String>Музей</x:String>
                         </Picker.Items>
-                    </Picker>
+                    </Picker>-->
                     <Entry
                         Margin="0,5"
                         BackgroundColor="Transparent"
@@ -88,10 +91,14 @@
                     <ListView
                         BackgroundColor="Transparent"
                         ItemSelected="OnRegionSelected"
-                        ItemsSource="{Binding FilteredRegions}"
+                        ItemsSource="{Binding FilteredResults}"
                         MaximumHeightRequest="150"
-                        SelectedItem="{Binding SelectedRegion, Mode=TwoWay}"
+                        SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                         SelectionMode="Single">
+                        <!--
+                            ItemsSource="{Binding FilteredRegions}"
+                            SelectedItem="{Binding SelectedRegion, Mode=TwoWay}"
+                        -->
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
