@@ -4,9 +4,12 @@ namespace MuseoViewUI
 {
     public partial class MainPage : ContentPage
     {
+        private MuseumSearchViewModel viewModel1;
+
         public MainPage(MuseumSearchViewModel viewModel)
         {
             InitializeComponent();
+            this.viewModel1 = viewModel;
             BindingContext = viewModel;
         }
 
@@ -17,7 +20,7 @@ namespace MuseoViewUI
 
         private void OnRegionSelected(object sender, SelectedItemChangedEventArgs e)
         {
-
+            viewModel1.SelectedItem = e;
         }
 
         private void OnMuseumSearchTextChanged(object sender, TextChangedEventArgs e)

@@ -22,7 +22,8 @@ namespace MuseoViewUI
             //DependencyService.Register<MuseumDatabase>();
             //DependencyService.Register<MuseumSearchViewModel>();
             this.museumDatabaseService = museumDatabaseService;
-            MainPage = serviceProvider.GetRequiredService<MainPage>();
+            //MainPage = serviceProvider.GetRequiredService<MainPage>();
+            MainPage = new NavigationPage(serviceProvider.GetRequiredService<MainPage>());
             MuseumsListView museumsListView = new MuseumsListView();
             InitializeDatabase();
         }

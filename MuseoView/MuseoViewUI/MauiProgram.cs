@@ -23,6 +23,8 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<MuseumSearchViewModel>();  // Регистрираме ViewModel-а
 
+        builder.Services.AddSingleton<MuseumsByObjectViewModel>();  // Регистрираме ViewModel-а
+
         builder.Services.AddSingleton<MainPage>();  // Регистрираме MainPage с DI контейнера
 
         builder.UseMauiApp<App>();  // Настройваме основното приложение

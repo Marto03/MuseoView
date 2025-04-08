@@ -2,16 +2,15 @@
 using Database.DTOs;
 using Database.Models;
 using MuseoViewUI.Commands;
+using MuseoViewUI.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MuseoViewUI.ViewModels
 {
-    public class MuseumSearchViewModel : INotifyPropertyChanged
+    public class MuseumSearchViewModel : BaseViewModel
     {
         private readonly MuseumDatabase museumDatabaseService;
         private string _searchText;
@@ -21,8 +20,6 @@ namespace MuseoViewUI.ViewModels
         private ObservableCollection<string> _regions;
         private ObservableCollection<MuseumDTO> _museums;
         private bool _isMuseumListVisible;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public MuseumSearchViewModel(MuseumDatabase museumDatabaseService)
         {
@@ -37,6 +34,66 @@ namespace MuseoViewUI.ViewModels
 
             InitializeAsync(); // Fire and forget
         }
+
+
+
+
+        //private RegionModel _selectedItem;
+        //public RegionModel SelectedItem
+        //{
+        //    get => _selectedItem;
+        //    set
+        //    {
+        //        if (SetProperty(ref _selectedItem, value) && value != null)
+        //        {
+        //            // Извикваме метода за навигация
+        //            _ = NavigateToMuseumsByRegionAsync(value);
+        //        }
+        //    }
+        //}
+
+
+        private object _selectedItem;
+        public object SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                if (SetProperty(ref _selectedItem, value) && value != null)
+                {
+                    if (SelectedSearchOption == "Област" && value is RegionModel region)
+                    {
+                        _ = NavigateToMuseumsByRegionAsync(region);
+                    }
+                    // else if (SelectedSearchOption == "Музей" && value is string museumName)
+                    // {
+                    //     // можеш да добавиш навигация за музей тук
+                    // }
+                }
+            }
+        }
+
+
+
+        private async Task NavigateToMuseumsByRegionAsync(RegionModel region)
+        {
+
+            var viewModel = new MuseumsByObjectViewModel(museumDatabaseService);
+            await viewModel.LoadMuseumsByRegionAsync(region.Id, region.Name);
+
+            var page = new MuseumsByObjectView
+            {
+                BindingContext = viewModel
+            };
+
+            await Application.Current.MainPage.Navigation.PushAsync(page);
+        }
+
+
+
+
+
+
 
         private async Task InitializeAsync()
         {
@@ -70,7 +127,6 @@ namespace MuseoViewUI.ViewModels
             }
         }
 
-        public string SelectedItem { get; set; }
 
         public string SearchText
         {
@@ -167,9 +223,5 @@ namespace MuseoViewUI.ViewModels
             FilteredResults = new ObservableCollection<string>(source.Take(50)); // Ограничаване на резултатите (по избор)
         }
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

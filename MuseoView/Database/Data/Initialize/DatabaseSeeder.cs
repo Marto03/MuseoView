@@ -10,6 +10,7 @@ namespace Database.Data.Initialize
             await SeedCitiesAsync(database);
             await SeedRegionsAsync(database);
             await SeedMuseumsAsync(database);
+            await SeedMuseumsPicturesAsync(database);
         }
 
         private static async Task SeedCitiesAsync(SQLiteAsyncConnection database)
@@ -3514,6 +3515,54 @@ namespace Database.Data.Initialize
                     #endregion
                 };
                 await database.InsertAllAsync(museums);
+            }
+        }
+        private static async Task SeedMuseumsPicturesAsync(SQLiteAsyncConnection database)
+        {
+            if (await database.Table<MuseumImageModel>().CountAsync() == 0)
+            {
+                // структурата ----------------------
+                var museumImages = new List<MuseumImageModel>
+                {
+                    new MuseumImageModel
+                    {
+                        MuseumId = 1,
+                        ImagePath = "Images/MuseumPictures/тест_Ямбол.jpg",
+                        IsPanorama = false
+                    },
+                    new MuseumImageModel
+                    {
+                        MuseumId = 1,
+                        ImagePath = "yambol_panorama.webp",
+                        IsPanorama = true
+                    },
+                    new MuseumImageModel
+                    {
+                        MuseumId = 2,
+                        ImagePath = "plovdiv_art_gallery.jpg",
+                        IsPanorama = false
+                    },
+                    new MuseumImageModel
+                    {
+                        MuseumId = 2,
+                        ImagePath = "plovdiv_art_panorama.jpg",
+                        IsPanorama = true
+                    },
+                    new MuseumImageModel
+                    {
+                        MuseumId = 3,
+                        ImagePath = "sofia_museum_main.jpg",
+                        IsPanorama = false
+                    },
+                    new MuseumImageModel
+                    {
+                        MuseumId = 3,
+                        ImagePath = "sofia_museum_360.jpg",
+                        IsPanorama = true
+                    }
+                };
+                // ---------------------
+                await database.InsertAllAsync(museumImages);
             }
         }
     }

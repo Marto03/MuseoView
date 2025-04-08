@@ -48,6 +48,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Images\MuseumPictures\тест_Ямбол.jpg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\Images\MuseumPictures\тест_Ямбол.jpg">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
@@ -58,6 +68,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Views\MuseumsByObjectView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\MuseumsListView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

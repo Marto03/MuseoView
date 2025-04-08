@@ -65,6 +65,12 @@ namespace Database.Data
                 .Where(m => m.Name == regionName) // Филтрираме по региона
                 .ToListAsync();
         }
+        public async Task<List<MuseumDTO>> GetMuseumsDTOByRegionAsync(int regionID)
+        {
+            return await _database.Table<MuseumDTO>()
+                .Where(m => m.RegionId == regionID) // Филтрираме по региона
+                .ToListAsync();
+        }
         public async Task<List<MuseumModel>> GetAllMuseumsAsync()
         {
             var museums = await _database.Table<MuseumModel>() // Филтрираме по региона
@@ -79,7 +85,8 @@ namespace Database.Data
             return museums.Select(m => new MuseumDTO
             {
                 Id = m.Id,
-                Name = m.Name
+                Name = m.Name,
+                RegionId = m.RegionId
             }).ToList();
         }
 
