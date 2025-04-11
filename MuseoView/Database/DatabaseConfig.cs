@@ -1,4 +1,6 @@
-﻿namespace Database
+﻿using Database.Data;
+
+namespace Database
 {
     public static class DatabaseConfig
     {
@@ -13,11 +15,23 @@
                 //DatabaseConfig.RequestStoragePermissions();
 
                 string folderPath = FileSystem.Current.AppDataDirectory;
+                //DeleteIfNeeded(Path.Combine(folderPath, "museumDatabase.db"));
+
+
                 //string folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Downloads");
                 //string folderPath = "/storage/emulated/0/Download";
 
                 return Path.Combine(folderPath, "museumDatabase.db");
             }
+        }
+
+        public static void DeleteIfNeeded(string dbPath)
+        {
+            if (File.Exists(dbPath))
+            {
+                File.Delete(dbPath); // Изтриваме старата база
+            }
+
         }
         //public static async Task RequestStoragePermissions()
         //{

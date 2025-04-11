@@ -11,7 +11,7 @@ namespace Database.Data
         public MuseumDatabase(string dbPath)
         {
             _database = new SQLiteAsyncConnection(dbPath);
-
+            
             //DatabaseConfig.CopyDatabaseToDownloads(); --- За копиране на базата в Downloads
 
             //CreateTablesAsync().Wait();
@@ -54,10 +54,17 @@ namespace Database.Data
         //    // Извличаме имената от резултата и ги връщаме като списък от string
         //    return regions.Select(r => r.Name).ToList();
         //}
-        public async Task<List<string>> GetAllRegionsAsync()
+        public async Task<List<RegionDTO>> GetAllRegionsAsync()
         {
             var regions = await _database.Table<RegionModel>().ToListAsync();
-            return regions.Select(r => r.Name).ToList(); // Връщаме само имената на регионите
+
+            return regions
+                .Select(r => new RegionDTO
+                {
+                    Id = r.Id,
+                    Name = r.Name
+                })
+                .ToList();
         }
         public async Task<List<MuseumModel>> GetMuseumsByRegionAsync(string regionName)
         {
@@ -67,9 +74,20 @@ namespace Database.Data
         }
         public async Task<List<MuseumDTO>> GetMuseumsDTOByRegionAsync(int regionID)
         {
-            return await _database.Table<MuseumDTO>()
-                .Where(m => m.RegionId == regionID) // Филтрираме по региона
-                .ToListAsync();
+            var museums = await _database.Table<MuseumModel>().Where(m=> m.RegionId == regionID).ToListAsync();
+            return museums.Select(r=> new MuseumDTO
+                { Id = r.Id,
+                  Name = r.Name,
+                  RegionId = r.RegionId
+                })
+                .ToList();
+                 // Филтрираме по региона
+        }
+        public async Task<MuseumModel> GetMuseumByIdAsync(int museumId)
+        {
+            var museum = await _database.Table<MuseumModel>().Where(m=> m.Id == museumId).ToListAsync();
+            return museum?.FirstOrDefault();
+                 // Филтрираме по региона
         }
         public async Task<List<MuseumModel>> GetAllMuseumsAsync()
         {

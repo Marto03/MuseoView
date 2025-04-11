@@ -90,7 +90,6 @@
                     <!--  Списък с резултати вътре в същия Frame  -->
                     <ListView
                         BackgroundColor="Transparent"
-                        ItemSelected="OnRegionSelected"
                         ItemsSource="{Binding FilteredResults}"
                         MaximumHeightRequest="150"
                         SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
@@ -105,7 +104,7 @@
                                     <StackLayout Padding="5" BackgroundColor="Transparent">
                                         <Label
                                             FontSize="18"
-                                            Text="{Binding}"
+                                            Text="{Binding Name}"
                                             TextColor="White" />
                                     </StackLayout>
                                 </ViewCell>

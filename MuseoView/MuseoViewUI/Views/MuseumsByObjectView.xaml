@@ -4,39 +4,38 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <ContentPage.Content>
-        <StackLayout Padding="10" Spacing="10">
+        <ScrollView>
+            <StackLayout
+                Padding="10"
+                Background="#D9A95C"
+                Spacing="10">
 
-            <!--  Заглавие  -->
-            <Label
-                FontAttributes="Bold"
-                FontSize="22"
-                HorizontalOptions="Center"
-                Text="{Binding RegionName}"
-                TextColor="Black" />
+                <!--  Заглавие  -->
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="30"
+                    HorizontalOptions="Center"
+                    Text="{Binding RegionName}"
+                    TextColor="Black" />
 
-            <!--  Списък с музеи  -->
-            <CollectionView ItemsSource="{Binding Museums}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame
-                            Margin="5"
-                            Padding="10"
-                            BorderColor="Gray">
-                            <StackLayout>
-                                <Label
-                                    FontSize="18"
-                                    Text="{Binding Name}"
-                                    TextColor="Black" />
-                                <Label
-                                    FontSize="14"
-                                    Text="{Binding Description}"
-                                    TextColor="Gray" />
-                            </StackLayout>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                <!--  Списък с музеи  -->
+                <CollectionView ItemsSource="{Binding Museums}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame
+                                Margin="5"
+                                Padding="10"
+                                BorderColor="Gray">
+                                <StackLayout>
+                                    <Label FontSize="18" Text="{Binding Name}" />
 
-        </StackLayout>
+                                </StackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>
