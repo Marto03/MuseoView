@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Database.Data;
 using Database.Models;
-using Database.Services;
 
 namespace MuseoViewUI.ViewModels
 {
-    public class MuseumDetailsViewModel : INotifyPropertyChanged
+    public class MuseumDetailsViewModel : BaseViewModel
     {
-        private readonly MuseumDatabaseService _museumService;
+        private readonly MuseumDatabase museumService;
         private MuseumModel _museum;
 
         public MuseumModel Museum
@@ -24,20 +17,20 @@ namespace MuseoViewUI.ViewModels
                 OnPropertyChanged();
             }
         }
+        public string RegionName { get; set; }
+        public string MuseumType => Enum.GetName(typeof(MuseumTypeEnum), Museum?.TypeStatusId ?? 0);
 
-        public MuseumDetailsViewModel(MuseumDatabaseService _museumService)
+        public MuseumDetailsViewModel(MuseumDatabase museumService)
         {
-            this._museumService = _museumService;
+            this.museumService = museumService;
         }
 
         public async Task LoadMuseumAsync(int museumId)
         {
-            Museum = await _museumService.GetMuseumByIdAsync(museumId);
+            _museum = await museumService.GetMuseumByIdAsync(museumId);
+            RegionName = await museumService.GetRegionNameByIdAsync(_museum.RegionId);
+            OnPropertyChanged(nameof(Museum));
+            OnPropertyChanged(nameof(RegionName));
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

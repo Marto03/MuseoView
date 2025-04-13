@@ -72,13 +72,24 @@ namespace MuseoViewUI.ViewModels
                 }
             }
         }
+        private async void NavigateToMuseumById(int MuseumId)
+        {
 
+            var viewModel = new MuseumDetailsViewModel(museumDatabaseService);
+            await viewModel.LoadMuseumAsync(MuseumId);
+            //await viewModel.LoadMuseumsByRegionAsync(region.Id, region.Name);
 
+            var page = new MuseumDetailsView
+            {
+                BindingContext = viewModel
+            };
 
+            await Application.Current.MainPage.Navigation.PushAsync(page);
+        }
         private async Task NavigateToMuseumsByRegionAsync(RegionDTO region)
         {
 
-            var viewModel = new MuseumsByObjectViewModel(museumDatabaseService);
+            var viewModel = new MuseumsByObjectViewModel(museumDatabaseService, NavigateToMuseumById);
             await viewModel.LoadMuseumsByRegionAsync(region.Id, region.Name);
 
             var page = new MuseumsByObjectView
@@ -92,10 +103,11 @@ namespace MuseoViewUI.ViewModels
         private async Task NavigateToMuseumByIdAsync(int MuseumId)
         {
 
-            var viewModel = new MuseumsByObjectViewModel(museumDatabaseService);
+            var viewModel = new MuseumDetailsViewModel(museumDatabaseService);
+            await viewModel.LoadMuseumAsync(MuseumId);
             //await viewModel.LoadMuseumsByRegionAsync(region.Id, region.Name);
 
-            var page = new MuseumsByObjectView
+            var page = new MuseumDetailsView
             {
                 BindingContext = viewModel
             };
@@ -245,10 +257,19 @@ namespace MuseoViewUI.ViewModels
 
             if (!string.IsNullOrWhiteSpace(SearchText))
             {
-                source = source.Where(x => x.ToString().ToLower().Contains(SearchText.ToLower()));
+                source = source.Where(obj =>
+                {
+                    var nameProp = obj.GetType().GetProperty("Name");
+                    if (nameProp != null)
+                    {
+                        string nameValue = nameProp.GetValue(obj)?.ToString() ?? string.Empty;
+                        return nameValue.ToLower().Contains(SearchText.ToLower());
+                    }
+                    return false;
+                });
             }
 
-            FilteredResults = new ObservableCollection<Object>(source.Take(50)); // Ограничаване на резултатите (по избор)
+            FilteredResults = new ObservableCollection<object>(source.Take(50));
         }
 
     }

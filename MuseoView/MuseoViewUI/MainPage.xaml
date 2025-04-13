@@ -84,7 +84,6 @@
                         Opacity="0.7"
                         Placeholder="Търси..."
                         Text="{Binding SearchText, Mode=TwoWay}"
-                        TextChanged="OnSearchTextChanged"
                         TextColor="White" />
 
                     <!--  Списък с резултати вътре в същия Frame  -->

@@ -89,6 +89,14 @@ namespace Database.Data
             return museum?.FirstOrDefault();
                  // Филтрираме по региона
         }
+        public async Task<string?> GetRegionNameByIdAsync(int regionId)
+        {
+            var region = await _database.Table<RegionModel>()
+                                        .FirstOrDefaultAsync(r => r.Id == regionId);
+
+            return region?.Name;
+        }
+
         public async Task<List<MuseumModel>> GetAllMuseumsAsync()
         {
             var museums = await _database.Table<MuseumModel>() // Филтрираме по региона

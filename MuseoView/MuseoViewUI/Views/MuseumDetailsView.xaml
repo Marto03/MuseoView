@@ -1,8 +1,9 @@
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewmodels="clr-namespace:MuseoViewUI.ViewModels"
-             x:Class="MuseoViewUI.Views.MuseumDetailsView"
-             Title="Детайли за музея">
+<ContentPage
+    x:Class="MuseoViewUI.Views.MuseumDetailsView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodels="clr-namespace:MuseoViewUI.ViewModels"
+    Title="Детайли за музея">
 
     <!--<ContentPage.BindingContext>
         <viewmodels:MuseumDetailsViewModel />
@@ -11,32 +12,34 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="16">
 
-            <!-- Име на музея -->
-            <Label Text="{Binding Museum.Name}"
-                   FontSize="26"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center" />
+            <!--  Име на музея  -->
+            <Label
+                FontAttributes="Bold"
+                FontSize="26"
+                HorizontalOptions="Center"
+                Text="{Binding Museum.Name}" />
 
-            <!-- Локация -->
-            <Label Text="Локация:" FontAttributes="Bold" />
-            <Label Text="{Binding Museum.Location}" FontSize="16" />
+            <!--  Локация  -->
+            <Label FontAttributes="Bold" Text="Локация:" />
+            <Label FontSize="16" Text="{Binding Museum.Location}" />
 
-            <!-- Регион и Тип (тук могат да се мапнат от ID към име, ако имаш enums) -->
-            <Label Text="Регион ID:" FontAttributes="Bold" />
-            <Label Text="{Binding Museum.RegionId}" />
+            <!--  Регион и Тип (тук могат да се мапнат от ID към име, ако имаш enums)  -->
+            <Label FontAttributes="Bold" Text="Регион:" />
+            <Label Text="{Binding RegionName}" />
 
-            <Label Text="Тип/Статус ID:" FontAttributes="Bold" />
-            <Label Text="{Binding Museum.TypeStatusId}" />
+            <Label FontAttributes="Bold" Text="Тип:" />
+            <Label Text="{Binding MuseumType}" />
 
-            <!-- Работно време -->
-            <Label Text="Работно време:" FontAttributes="Bold" />
-            <Label Text="{Binding Museum.OpeningHours}" FontSize="16" />
+            <!--  Работно време  -->
+            <Label FontAttributes="Bold" Text="Работно време:" />
+            <Label FontSize="16" Text="{Binding Museum.OpeningHours}" />
 
-            <!-- Описание -->
-            <Label Text="Описание:" FontAttributes="Bold" />
-            <Label Text="{Binding Museum.Description}" 
-                   FontSize="14"
-                   LineBreakMode="WordWrap" />
+            <!--  Описание  -->
+            <Label FontAttributes="Bold" Text="Описание:" />
+            <Label
+                FontSize="14"
+                LineBreakMode="WordWrap"
+                Text="{Binding Museum.Description}" />
 
         </VerticalStackLayout>
     </ScrollView>
