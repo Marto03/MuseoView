@@ -1,5 +1,6 @@
 ﻿using Database;
 using Database.Data;
+using Database.Services;
 using Microsoft.Extensions.Logging;
 using MuseoViewUI.ViewModels;
 
@@ -7,7 +8,12 @@ namespace MuseoViewUI;
 
 public static class MauiProgram
 {
-	public static MauiApp CreateMauiApp()
+    public static IServiceProvider Services => Current.Services;
+
+    private static MauiApp _mauiApp;
+    public static MauiApp Current => _mauiApp ?? throw new InvalidOperationException("MauiApp is not initialized yet.");
+
+    public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
 		//builder
@@ -21,7 +27,11 @@ public static class MauiProgram
         builder.Services.AddSingleton<MuseumDatabase>(serviceProvider =>
                 new MuseumDatabase(DatabaseConfig.DbPath));  // Път към базата
 
+        builder.Services.AddSingleton<MuseumDatabaseService>();
+
         builder.Services.AddSingleton<MuseumSearchViewModel>();  // Регистрираме ViewModel-а
+        builder.Services.AddSingleton<MuseumDetailsViewModel>();
+
 
         builder.Services.AddSingleton<MuseumsByObjectViewModel>();  // Регистрираме ViewModel-а
 

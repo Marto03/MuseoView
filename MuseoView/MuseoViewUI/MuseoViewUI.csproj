@@ -68,10 +68,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Views\MuseumsByObjectView.xaml">
+	  <Compile Update="Views\MuseumDetailsView.xaml.cs">
+	    <DependentUpon>MuseumDetailsView.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Views\MuseumsListView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\MuseumsListView.xaml">
+	  <MauiXaml Update="Views\MuseumDetailsView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

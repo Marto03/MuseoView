@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using Database.Models;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,13 @@ namespace Database.Services
         public async Task<List<string>> GetAllRegionsAsync()
         {
             return await _database.QueryScalarsAsync<string>("SELECT DISTINCT Name FROM Regions");
+        }
+
+        public async Task<MuseumModel> GetMuseumByIdAsync(int museumId)
+        {
+            // Примерна заявка към базата данни
+            var result = await _database.QueryAsync<MuseumModel>("SELECT * FROM Museums WHERE Id = ?", museumId);
+            return result.FirstOrDefault(); // Вземаме първия елемент или null, ако няма такъв
         }
     }
 }

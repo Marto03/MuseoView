@@ -1,0 +1,43 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:MuseoViewUI.ViewModels"
+             x:Class="MuseoViewUI.Views.MuseumDetailsView"
+             Title="Детайли за музея">
+
+    <!--<ContentPage.BindingContext>
+        <viewmodels:MuseumDetailsViewModel />
+    </ContentPage.BindingContext>-->
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <!-- Име на музея -->
+            <Label Text="{Binding Museum.Name}"
+                   FontSize="26"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <!-- Локация -->
+            <Label Text="Локация:" FontAttributes="Bold" />
+            <Label Text="{Binding Museum.Location}" FontSize="16" />
+
+            <!-- Регион и Тип (тук могат да се мапнат от ID към име, ако имаш enums) -->
+            <Label Text="Регион ID:" FontAttributes="Bold" />
+            <Label Text="{Binding Museum.RegionId}" />
+
+            <Label Text="Тип/Статус ID:" FontAttributes="Bold" />
+            <Label Text="{Binding Museum.TypeStatusId}" />
+
+            <!-- Работно време -->
+            <Label Text="Работно време:" FontAttributes="Bold" />
+            <Label Text="{Binding Museum.OpeningHours}" FontSize="16" />
+
+            <!-- Описание -->
+            <Label Text="Описание:" FontAttributes="Bold" />
+            <Label Text="{Binding Museum.Description}" 
+                   FontSize="14"
+                   LineBreakMode="WordWrap" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
