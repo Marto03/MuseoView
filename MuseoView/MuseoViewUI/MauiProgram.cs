@@ -1,7 +1,10 @@
 ﻿using Database;
 using Database.Data;
 using Database.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Controls.Hosting;
+using Microsoft.Maui.Hosting;
 using MuseoViewUI.ViewModels;
 
 namespace MuseoViewUI;
