@@ -1,11 +1,8 @@
 ﻿using Database.Data;
 using Database.DTOs;
-using Database.Models;
 using MuseoViewUI.Commands;
 using MuseoViewUI.Views;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace MuseoViewUI.ViewModels

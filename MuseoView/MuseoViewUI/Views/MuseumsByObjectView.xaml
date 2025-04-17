@@ -4,12 +4,16 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Name="RootPage">
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Offset="0" Color="#0B2943" />
+            <GradientStop Offset="1" Color="#5D94B4" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
     <ContentPage.Content>
+
         <ScrollView>
-            <StackLayout
-                Padding="10"
-                Background="#D9A95C"
-                Spacing="10">
+            <StackLayout Padding="10" Spacing="10">
 
                 <!--  Заглавие  -->
                 <Label
@@ -29,11 +33,23 @@
                                 Padding="10"
                                 BorderColor="Gray">
                                 <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding BindingContext.MuseumTappedCommand, Source={x:Reference Name=RootPage}}" CommandParameter="{Binding}" />
+                                    <TapGestureRecognizer Command="{Binding BindingContext.MuseumTappedCommand, Source={x:Reference RootPage}}" CommandParameter="{Binding}" />
                                 </Frame.GestureRecognizers>
-                                <StackLayout>
-                                    <Label FontSize="18" Text="{Binding Name}" />
-                                </StackLayout>
+
+                                <!--  Хоризонтално подравняване на снимка и текст  -->
+                                <HorizontalStackLayout Spacing="10">
+                                    <Image
+                                        Aspect="AspectFill"
+                                        HeightRequest="60"
+                                        Source="{Binding MainImagePath}"
+                                        VerticalOptions="Center"
+                                        WidthRequest="60" />
+
+                                    <Label
+                                        FontSize="18"
+                                        Text="{Binding Name}"
+                                        VerticalOptions="Center" />
+                                </HorizontalStackLayout>
                             </Frame>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

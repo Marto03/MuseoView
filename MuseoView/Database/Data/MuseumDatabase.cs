@@ -75,13 +75,20 @@ namespace Database.Data
         public async Task<List<MuseumDTO>> GetMuseumsDTOByRegionAsync(int regionID)
         {
             var museums = await _database.Table<MuseumModel>().Where(m=> m.RegionId == regionID).ToListAsync();
-            return museums.Select(r=> new MuseumDTO
-                { Id = r.Id,
-                  Name = r.Name,
-                  RegionId = r.RegionId
-                })
-                .ToList();
-                 // Филтрираме по региона
+            var regions = await _database.Table<RegionModel>().ToListAsync(); // ⬅️ Взимаме всички региони
+            return museums.Select(m =>
+            {
+                var region = regions.FirstOrDefault(r => r.Id == m.RegionId);
+
+                return new MuseumDTO
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    RegionId = m.RegionId,
+                    RegionName = region?.Name // ⬅️ Включваме името на региона
+                };
+            }).ToList();
+            // Филтрираме по региона
         }
         public async Task<MuseumModel> GetMuseumByIdAsync(int museumId)
         {

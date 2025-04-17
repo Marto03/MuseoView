@@ -2,117 +2,144 @@
 <ContentPage
     x:Class="MuseoViewUI.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#f5eee1">
 
-    <!--  Абсолютен Layout за контрол върху позиционирането  -->
-    <AbsoluteLayout>
+    <Grid>
+        <!--  Основно съдържание със Scroll  -->
+        <ScrollView>
+            <VerticalStackLayout Padding="20" Spacing="20">
 
-        <!--  Фоново изображение с адаптивно мащабиране  -->
-        <Image
-            x:Name="BackgroundImage"
-            AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
-            AbsoluteLayout.LayoutFlags="All"
-            Aspect="Fill"
-            Source="background.png" />
-
-        <!--  Основно съдържание  -->
-        <Grid
-            Padding="20"
-            AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
-            AbsoluteLayout.LayoutFlags="All">
-
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <!--  Текст "Museo View" на два реда  -->
-            <StackLayout Grid.Row="0" HorizontalOptions="Center">
+                <!--  Заглавие  -->
                 <Label
                     FontAttributes="Bold"
-                    FontSize="44"
+                    FontSize="28"
                     HorizontalTextAlignment="Center"
-                    Text="Museo"
-                    TextColor="SaddleBrown">
-                    <Label.Shadow>
-                        <Shadow
-                            Brush="Black"
-                            Opacity="0.7"
-                            Radius="5"
-                            Offset="4,4" />
-                    </Label.Shadow>
-                </Label>
-                <Label
-                    FontAttributes="Bold"
-                    FontSize="44"
-                    HorizontalTextAlignment="Center"
-                    Text="View"
-                    TextColor="SaddleBrown">
-                    <Label.Shadow>
-                        <Shadow
-                            Brush="Black"
-                            Opacity="0.7"
-                            Radius="5"
-                            Offset="4,4" />
-                    </Label.Shadow>
-                </Label>
-            </StackLayout>
-            <!--<Label Text="{Binding OpenMuseumsCount}" />-->
-            <!--  Търсачка с избор между "Област" и "Музей"  -->
-            <Frame
-                Grid.Row="1"
-                Margin="0,10"
-                Padding="10"
-                BackgroundColor="Transparent"
-                CornerRadius="15">
-                <VerticalStackLayout>
+                    Text="Музеи в България"
+                    TextColor="SaddleBrown" />
+
+                <!--  Карта  -->
+                <Image
+                    Margin="-20,0"
+                    Aspect="Fill"
+                    HorizontalOptions="Center"
+                    Source="bulgaria_map.png" />
+
+                <!--  Филтри  -->
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
                     <Picker
-                        Title="Избери какво да търсиш"
-                        ItemsSource="{Binding SearchOptions}"
-                        SelectedItem="{Binding SelectedSearchOption, Mode=TwoWay}" />
-                    <!--<Picker.Items>
-                            <x:String>Област</x:String>
-                            <x:String>Музей</x:String>
-                        </Picker.Items>
-                    </Picker>-->
-                    <Entry
-                        Margin="0,5"
-                        BackgroundColor="Transparent"
-                        FontSize="18"
-                        HeightRequest="40"
-                        Opacity="0.7"
-                        Placeholder="Търси..."
-                        Text="{Binding SearchText, Mode=TwoWay}"
-                        TextColor="White" />
+                        Title="Област"
+                        ItemDisplayBinding="{Binding Name}"
+                        ItemsSource="{Binding Regions}"
+                        SelectedItem="{Binding SelectedRegion}"
+                        WidthRequest="110" />
 
-                    <!--  Списък с резултати вътре в същия Frame  -->
-                    <ListView
-                        BackgroundColor="Transparent"
-                        ItemsSource="{Binding FilteredResults}"
-                        MaximumHeightRequest="150"
-                        SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                        SelectionMode="Single">
-                        <!--
-                            ItemsSource="{Binding FilteredRegions}"
-                            SelectedItem="{Binding SelectedRegion, Mode=TwoWay}"
-                        -->
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <ViewCell>
-                                    <StackLayout Padding="5" BackgroundColor="Transparent">
+                    <Picker
+                        Title="Тип музей"
+                        ItemsSource="{Binding MuseumTypes}"
+                        SelectedItem="{Binding SelectedType}"
+                        WidthRequest="110" />
+                </HorizontalStackLayout>
+
+                <!--  Заглавие на списъка  -->
+                <Label
+                    Margin="0,10,0,0"
+                    FontAttributes="Bold"
+                    FontSize="22"
+                    Text="Музеи"
+                    TextColor="SaddleBrown" />
+
+                <!--  Списък с музеи  -->
+                <CollectionView ItemsSource="{Binding Museums}" SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame
+                                Margin="0,5"
+                                Padding="10"
+                                BackgroundColor="White"
+                                BorderColor="#ddd"
+                                CornerRadius="15">
+                                <HorizontalStackLayout Spacing="10">
+
+                                    <!--  Снимка  -->
+                                    <Image
+                                        Aspect="AspectFit"
+                                        HeightRequest="80"
+                                        Source="background.png"
+                                        VerticalOptions="Start"
+                                        WidthRequest="60" />
+
+                                    <!--  Текстова информация  -->
+                                    <VerticalStackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Center">
                                         <Label
-                                            FontSize="18"
+                                            FontAttributes="Bold"
+                                            FontSize="16"
+                                            HorizontalOptions="FillAndExpand"
+                                            LineBreakMode="WordWrap"
+                                            MaxLines="2"
                                             Text="{Binding Name}"
-                                            TextColor="White" />
-                                    </StackLayout>
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </VerticalStackLayout>
-            </Frame>
+                                            TextColor="Black"
+                                            VerticalOptions="Start" />
+                                        <Label
+                                            FontSize="14"
+                                            Text="{Binding Location}"
+                                            TextColor="Gray" />
 
+                                        <Button
+                                            Padding="5,0"
+                                            BackgroundColor="#f5eee1"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewMoreCommand}"
+                                            CommandParameter="{Binding .}"
+                                            FontSize="14"
+                                            Text="Виж повече"
+                                            TextColor="SaddleBrown"
+                                            WidthRequest="100" />
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!--  Контрол за търсене  -->
+        <Grid
+            Margin="0,0,0,20"
+            Padding="10"
+            RowDefinitions="Auto"
+            VerticalOptions="End">
+
+            <!--  Поле за търсене  -->
+            <Entry
+                x:Name="SearchEntry"
+                Margin="0,0,10,0"
+                BackgroundColor="White"
+                Completed="OnSearchCompleted"
+                FontSize="16"
+                HeightRequest="50"
+                IsVisible="{Binding IsSearchVisible}"
+                Keyboard="Default"
+                Placeholder="Търсене на музеи..."
+                PlaceholderColor="Gray"
+                ReturnType="Search"
+                Text="{Binding SearchText, Mode=TwoWay}"
+                TextColor="Black"
+                VerticalOptions="Center" />
+
+            <!--  Бутон за търсене  -->
+            <Button
+                Padding="15,10"
+                BackgroundColor="SaddleBrown"
+                Clicked="OnSearchClicked"
+                CornerRadius="20"
+                FontSize="16"
+                HorizontalOptions="Center"
+                Text="🔍 Търси"
+                TextColor="White"
+                VerticalOptions="Center" />
+            <!--  IsVisible="{Binding IsSearchVisible, Converter={StaticResource InverseBoolConverter}}"  -->
         </Grid>
-    </AbsoluteLayout>
+
+    </Grid>
 </ContentPage>

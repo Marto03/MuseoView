@@ -18,17 +18,35 @@
 
         <!--  Списък с музеи в избраната област  -->
         <CollectionView
-        x:Name="MuseumsCollectionView"
-        Grid.Row="1"
-        Margin="0,10,0,0"
-        SelectionMode="Single"
-        SelectionChanged="OnMuseumSelected">
+            x:Name="MuseumsCollectionView"
+            Grid.Row="1"
+            Margin="0,10,0,0"
+            SelectionChanged="OnMuseumSelected"
+            SelectionMode="Single">
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <StackLayout Padding="10">
-                        <Label FontSize="Medium" Text="{Binding Name}" />
-                    </StackLayout>
+                    <Grid Padding="10" ColumnSpacing="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!--  Снимка на музея  -->
+                        <Image
+                            Grid.Column="0"
+                            Aspect="AspectFill"
+                            HeightRequest="60"
+                            Source="{Binding MainImagePath}"
+                            WidthRequest="60" />
+
+                        <!--  Име на музея  -->
+                        <Label
+                            Grid.Column="1"
+                            FontSize="Medium"
+                            Text="{Binding Name}"
+                            VerticalOptions="Center" />
+                    </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
