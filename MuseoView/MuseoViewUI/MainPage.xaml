@@ -3,8 +3,19 @@
     x:Class="MuseoViewUI.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ct="clr-namespace:MuseoViewUI.Converters"
     BackgroundColor="#f5eee1">
-
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ct:InverseBoolConverter x:Key="inverseBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Offset="0" Color="#0B2943" />
+            <GradientStop Offset="1" Color="#5D94B4" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
     <Grid>
         <!--  Основно съдържание със Scroll  -->
         <ScrollView>
@@ -15,8 +26,8 @@
                     FontAttributes="Bold"
                     FontSize="28"
                     HorizontalTextAlignment="Center"
-                    Text="Музеи в България"
-                    TextColor="SaddleBrown" />
+                    Text="Museo View"
+                    TextColor="White" />
 
                 <!--  Карта  -->
                 <Image
@@ -32,70 +43,131 @@
                         ItemDisplayBinding="{Binding Name}"
                         ItemsSource="{Binding Regions}"
                         SelectedItem="{Binding SelectedRegion}"
+                        TitleColor="White"
                         WidthRequest="110" />
 
                     <Picker
                         Title="Тип музей"
                         ItemsSource="{Binding MuseumTypes}"
-                        SelectedItem="{Binding SelectedType}"
+                        SelectedItem="{Binding SelectedMuseumType}"
+                        TitleColor="White"
                         WidthRequest="110" />
                 </HorizontalStackLayout>
 
+                <!--  Контрол за търсене  -->
+                <!--<Grid
+            Margin="0,0,0,20"
+            Padding="10"
+            RowDefinitions="Auto"
+            VerticalOptions="End">-->
+
+                <!--  Поле за търсене  -->
+                <Entry
+                    x:Name="SearchEntry"
+                    Margin="0,0,10,0"
+                    BackgroundColor="White"
+                    FontSize="16"
+                    HeightRequest="50"
+                    IsVisible="{Binding IsSearchVisible}"
+                    Keyboard="Default"
+                    Placeholder="Търсене на музеи..."
+                    PlaceholderColor="Gray"
+                    ReturnType="Search"
+                    Text="{Binding SearchText, Mode=TwoWay}"
+                    TextColor="Black"
+                    VerticalOptions="Center" />
+
+                <!--  Бутон за търсене  -->
+                <Button
+                    Padding="15,10"
+                    Command="{Binding ToggleSearchCommand}"
+                    CornerRadius="20"
+                    FontSize="16"
+                    HorizontalOptions="Center"
+                    IsVisible="{Binding IsSearchVisible, Converter={StaticResource inverseBoolConverter}}"
+                    Text="🔍 Търси"
+                    TextColor="White"
+                    VerticalOptions="Center"
+                    Visual="Default">
+                    <!--  Това е важно  -->
+
+                    <Button.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Offset="0.0" Color="#c49c67" />
+                            <GradientStop Offset="1.0" Color="#d9c09e" />
+                        </LinearGradientBrush>
+                    </Button.Background>
+                </Button>
+                <!--</Grid>-->
                 <!--  Заглавие на списъка  -->
                 <Label
                     Margin="0,10,0,0"
                     FontAttributes="Bold"
                     FontSize="22"
                     Text="Музеи"
-                    TextColor="SaddleBrown" />
+                    TextColor="White" />
 
                 <!--  Списък с музеи  -->
-                <CollectionView ItemsSource="{Binding Museums}" SelectionMode="None">
+                <CollectionView
+                    HeightRequest="500"
+                    ItemSizingStrategy="MeasureFirstItem"
+                    ItemsLayout="VerticalList"
+                    ItemsSource="{Binding FilteredResults}"
+                    SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Frame
                                 Margin="0,5"
                                 Padding="10"
-                                BackgroundColor="White"
                                 BorderColor="#ddd"
                                 CornerRadius="15">
-                                <HorizontalStackLayout Spacing="10">
+                                <Frame.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Offset="0.0" Color="#c49c67" />
+                                        <GradientStop Offset="1.0" Color="#d9c09e" />
+                                    </LinearGradientBrush>
+                                </Frame.Background>
+                                <Grid>
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewMoreCommand}" CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
+                                    <HorizontalStackLayout Spacing="10">
 
-                                    <!--  Снимка  -->
-                                    <Image
-                                        Aspect="AspectFit"
-                                        HeightRequest="80"
-                                        Source="background.png"
-                                        VerticalOptions="Start"
-                                        WidthRequest="60" />
+                                        <!--  Снимка  -->
+                                        <Image
+                                            Aspect="AspectFit"
+                                            HeightRequest="80"
+                                            Source="background.png"
+                                            VerticalOptions="Start"
+                                            WidthRequest="60" />
 
-                                    <!--  Текстова информация  -->
-                                    <VerticalStackLayout HorizontalOptions="FillAndExpand" VerticalOptions="Center">
-                                        <Label
-                                            FontAttributes="Bold"
-                                            FontSize="16"
-                                            HorizontalOptions="FillAndExpand"
-                                            LineBreakMode="WordWrap"
-                                            MaxLines="2"
-                                            Text="{Binding Name}"
-                                            TextColor="Black"
-                                            VerticalOptions="Start" />
-                                        <Label
-                                            FontSize="14"
-                                            Text="{Binding Location}"
-                                            TextColor="Gray" />
+                                        <!--  Текстова информация  -->
+                                        <VerticalStackLayout VerticalOptions="Center">
+                                            <Label
+                                                FontAttributes="Bold"
+                                                FontSize="16"
+                                                LineBreakMode="WordWrap"
+                                                MaxLines="2"
+                                                Text="{Binding Name}"
+                                                TextColor="Black"
+                                                VerticalOptions="Start" />
+                                            <!--<Label
+                                                FontSize="14"
+                                                Text="{Binding RegionName}"
+                                                TextColor="Gray" />-->
 
-                                        <Button
-                                            Padding="5,0"
-                                            BackgroundColor="#f5eee1"
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewMoreCommand}"
-                                            CommandParameter="{Binding .}"
-                                            FontSize="14"
-                                            Text="Виж повече"
-                                            TextColor="SaddleBrown"
-                                            WidthRequest="100" />
-                                    </VerticalStackLayout>
-                                </HorizontalStackLayout>
+                                            <!--<Button
+                                                Padding="5,0"
+                                                BackgroundColor="#f5eee1"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.ViewMoreCommand}"
+                                                CommandParameter="{Binding .}"
+                                                FontSize="14"
+                                                Text="Виж повече"
+                                                TextColor="SaddleBrown"
+                                                WidthRequest="100" />-->
+                                        </VerticalStackLayout>
+                                    </HorizontalStackLayout>
+                                </Grid>
                             </Frame>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
@@ -103,43 +175,6 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!--  Контрол за търсене  -->
-        <Grid
-            Margin="0,0,0,20"
-            Padding="10"
-            RowDefinitions="Auto"
-            VerticalOptions="End">
-
-            <!--  Поле за търсене  -->
-            <Entry
-                x:Name="SearchEntry"
-                Margin="0,0,10,0"
-                BackgroundColor="White"
-                Completed="OnSearchCompleted"
-                FontSize="16"
-                HeightRequest="50"
-                IsVisible="{Binding IsSearchVisible}"
-                Keyboard="Default"
-                Placeholder="Търсене на музеи..."
-                PlaceholderColor="Gray"
-                ReturnType="Search"
-                Text="{Binding SearchText, Mode=TwoWay}"
-                TextColor="Black"
-                VerticalOptions="Center" />
-
-            <!--  Бутон за търсене  -->
-            <Button
-                Padding="15,10"
-                BackgroundColor="SaddleBrown"
-                Clicked="OnSearchClicked"
-                CornerRadius="20"
-                FontSize="16"
-                HorizontalOptions="Center"
-                Text="🔍 Търси"
-                TextColor="White"
-                VerticalOptions="Center" />
-            <!--  IsVisible="{Binding IsSearchVisible, Converter={StaticResource InverseBoolConverter}}"  -->
-        </Grid>
 
     </Grid>
 </ContentPage>

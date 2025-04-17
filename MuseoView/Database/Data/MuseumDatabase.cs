@@ -85,7 +85,8 @@ namespace Database.Data
                     Id = m.Id,
                     Name = m.Name,
                     RegionId = m.RegionId,
-                    RegionName = region?.Name // ⬅️ Включваме името на региона
+                    RegionName = region?.Name, // ⬅️ Включваме името на региона
+                    MuseumType = Enum.GetName(typeof(MuseumTypeEnum), m.TypeStatusId)
                 };
             }).ToList();
             // Филтрираме по региона
@@ -113,13 +114,20 @@ namespace Database.Data
         }
         public async Task<List<MuseumDTO>> GetAllMuseumNamesAsync()
         {
-            var museums = await _database.Table<MuseumModel>().ToListAsync(); // Взимаме всички
-
-            return museums.Select(m => new MuseumDTO
+            var museums = await _database.Table<MuseumModel>().ToListAsync();
+            var regions = await _database.Table<RegionModel>().ToListAsync(); // ⬅️ Взимаме всички региони
+            return museums.Select(m =>
             {
-                Id = m.Id,
-                Name = m.Name,
-                RegionId = m.RegionId
+                var region = regions.FirstOrDefault(r => r.Id == m.RegionId);
+
+                return new MuseumDTO
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    RegionId = m.RegionId,
+                    RegionName = region?.Name, // ⬅️ Включваме името на региона
+                    MuseumType = Enum.GetName(typeof(MuseumTypeEnum), m.TypeStatusId)
+                };
             }).ToList();
         }
 

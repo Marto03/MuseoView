@@ -5,6 +5,12 @@
     xmlns:viewmodels="clr-namespace:MuseoViewUI.ViewModels"
     Title="Детайли за музея">
 
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Offset="0" Color="#0B2943" />
+            <GradientStop Offset="1" Color="#5D94B4" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
     <!--<ContentPage.BindingContext>
         <viewmodels:MuseumDetailsViewModel />
     </ContentPage.BindingContext>-->
@@ -17,29 +23,52 @@
                 FontAttributes="Bold"
                 FontSize="26"
                 HorizontalOptions="Center"
-                Text="{Binding Museum.Name}" />
+                Text="{Binding Museum.Name}"
+                TextColor="White" />
 
             <!--  Локация  -->
-            <Label FontAttributes="Bold" Text="Локация:" />
-            <Label FontSize="16" Text="{Binding Museum.Location}" />
+            <Label
+                FontAttributes="Bold"
+                Text="Локация:"
+                TextColor="White" />
+            <Label
+                FontSize="16"
+                Text="{Binding Museum.Location}"
+                TextColor="White" />
 
             <!--  Регион и Тип (тук могат да се мапнат от ID към име, ако имаш enums)  -->
-            <Label FontAttributes="Bold" Text="Регион:" />
-            <Label Text="{Binding RegionName}" />
+            <Label
+                FontAttributes="Bold"
+                Text="Регион:"
+                TextColor="White" />
+            <Label Text="{Binding RegionName}" TextColor="White" />
 
-            <Label FontAttributes="Bold" Text="Тип:" />
-            <Label Text="{Binding MuseumType}" />
+            <Label
+                FontAttributes="Bold"
+                Text="Тип:"
+                TextColor="White" />
+            <Label Text="{Binding MuseumType}" TextColor="White" />
 
             <!--  Работно време  -->
-            <Label FontAttributes="Bold" Text="Работно време:" />
-            <Label FontSize="16" Text="{Binding Museum.OpeningHours}" />
+            <Label
+                FontAttributes="Bold"
+                Text="Работно време:"
+                TextColor="White" />
+            <Label
+                FontSize="16"
+                Text="{Binding Museum.OpeningHours}"
+                TextColor="White" />
 
             <!--  Описание  -->
-            <Label FontAttributes="Bold" Text="Описание:" />
+            <Label
+                FontAttributes="Bold"
+                Text="Описание:"
+                TextColor="White" />
             <Label
                 FontSize="14"
                 LineBreakMode="WordWrap"
-                Text="{Binding Museum.Description}" />
+                Text="{Binding Museum.Description}"
+                TextColor="White" />
 
         </VerticalStackLayout>
     </ScrollView>
