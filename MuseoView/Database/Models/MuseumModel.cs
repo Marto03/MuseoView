@@ -20,6 +20,8 @@ namespace Database.Models
         public string Location { get; set; }
         public string OpeningHours { get; set; } // работно време
 
+
+
         //public int Images { get; set; }
         //public string MainImagePath
         //{
