@@ -207,6 +207,12 @@ namespace MuseoViewUI.ViewModels
                 }
             }
         }
+
+        public ICommand ClearMuseumTypeCommand => new Command(() =>
+        {
+            SelectedMuseumType = null;
+        });
+
         public ObservableCollection<string> SearchOptions { get; set; }
 
         public string SelectedSearchOption
@@ -283,6 +289,11 @@ namespace MuseoViewUI.ViewModels
                 }
             }
         }
+
+        public ICommand ClearRegionCommand => new Command(() =>
+        {
+            SelectedRegion = null;
+        });
 
         public bool IsMuseumListVisible
         {
