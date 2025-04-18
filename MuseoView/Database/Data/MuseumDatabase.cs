@@ -112,7 +112,7 @@ namespace Database.Data
             return await _database.Table<MuseumModel>() // Филтрираме по региона
                 .ToListAsync();
         }
-        public async Task<List<MuseumDTO>> GetAllMuseumNamesAsync()
+        public async Task<List<MuseumDTO>> GetAllMuseumNamesAsync(Dictionary<int, string> regionImageMapper)
         {
             var museums = await _database.Table<MuseumModel>().ToListAsync();
             var regions = await _database.Table<RegionModel>().ToListAsync(); // ⬅️ Взимаме всички региони
@@ -126,9 +126,27 @@ namespace Database.Data
                     Name = m.Name,
                     RegionId = m.RegionId,
                     RegionName = region?.Name, // ⬅️ Включваме името на региона
-                    MuseumType = Enum.GetName(typeof(MuseumTypeEnum), m.TypeStatusId)
+                    MuseumType = Enum.GetName(typeof(MuseumTypeEnum), m.TypeStatusId),
+                    RegionPictureName = regionImageMapper.FirstOrDefault(r => r.Key == m.RegionId).Value
                 };
             }).ToList();
+        }
+        public async Task<string> GetRegionNameForPictureByMuseumId(int museumId, Dictionary<int, string> regionImageMapper)
+        {
+            // Взимаме музея от базата
+            var museum = await _database.Table<MuseumModel>()
+                                         .FirstOrDefaultAsync(m => m.Id == museumId);
+
+            if (museum == null)
+                return null;
+
+            // Взимаме RegionId на музея и търсим в речника
+            if (regionImageMapper.TryGetValue(museum.RegionId, out var pictureName))
+            {
+                return pictureName;
+            }
+
+            return null;
         }
 
         //public Task<List<MuseumModel>> GetMuseumsAsync()

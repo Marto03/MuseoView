@@ -137,9 +137,9 @@
                                         <Image
                                             Aspect="AspectFit"
                                             HeightRequest="80"
-                                            Source="background.png"
+                                            Source="{Binding MainImagePath}"
                                             VerticalOptions="Start"
-                                            WidthRequest="60" />
+                                            WidthRequest="80" />
 
                                         <!--  Текстова информация  -->
                                         <VerticalStackLayout VerticalOptions="Center">

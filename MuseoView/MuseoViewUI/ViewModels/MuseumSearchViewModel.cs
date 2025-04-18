@@ -1,6 +1,7 @@
 ﻿using Database.Data;
 using Database.DTOs;
 using MuseoViewUI.Commands;
+using MuseoViewUI.ImageMapper;
 using MuseoViewUI.Views;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -306,12 +307,12 @@ namespace MuseoViewUI.ViewModels
         {
             if (string.IsNullOrEmpty(region))
             {
-                var allMuseums = await museumDatabaseService.GetAllMuseumNamesAsync();
+                var allMuseums = await museumDatabaseService.GetAllMuseumNamesAsync(RegionImageMapper.RegionNames);
                 Museums = new ObservableCollection<MuseumDTO>(allMuseums);
             }
             else
             {
-                var museums = await museumDatabaseService.GetAllMuseumNamesAsync();
+                var museums = await museumDatabaseService.GetAllMuseumNamesAsync(RegionImageMapper.RegionNames);
                 Museums = new ObservableCollection<MuseumDTO>(museums);
             }
             FilterResults();

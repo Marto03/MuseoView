@@ -17,6 +17,7 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="16">
+            <Image Source="{Binding MainImagePath}" />
 
             <!--  Име на музея  -->
             <Label
@@ -34,7 +35,7 @@
             <Label
                 FontSize="16"
                 Text="{Binding Museum.Location}"
-                TextColor="White" />
+                TextColor="White"/>
 
             <!--  Регион и Тип (тук могат да се мапнат от ID към име, ако имаш enums)  -->
             <Label
@@ -69,7 +70,13 @@
                 LineBreakMode="WordWrap"
                 Text="{Binding Museum.Description}"
                 TextColor="White" />
-
+            <CarouselView ItemsSource="{Binding MuseumImages}">
+                <CarouselView.ItemTemplate>
+                    <DataTemplate>
+                        <Image Aspect="AspectFit" Source="{Binding}" />
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
+            </CarouselView>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

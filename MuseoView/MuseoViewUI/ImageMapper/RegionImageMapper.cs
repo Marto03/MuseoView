@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
 namespace MuseoViewUI.ImageMapper
 {
     public static class RegionImageMapper
     {
+
+        private static Dictionary<string, List<string>> _imageData;
         public static Dictionary<int, string> RegionNames { get; set; } = new Dictionary<int, string>
         {
             { 1, "blagoevgrad" },
@@ -39,5 +37,37 @@ namespace MuseoViewUI.ImageMapper
             { 27, "shumen" },
             { 28, "yambol" }
         };
+        public static async Task InitializeAsync()
+        {
+            if (_imageData != null) return;
+            var test = FileSystem.OpenAppPackageFileAsync("museum_images.json");
+            using var stream = await FileSystem.OpenAppPackageFileAsync("museum_images.json");
+            using var reader = new StreamReader(stream);
+            string json = await reader.ReadToEndAsync();
+            _imageData = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(json);
+        }
+
+        public static List<string> GetImages(string regionName, int museumId, bool getMainImage = false)
+        {
+            string key = $"{regionName}_{museumId}";
+            if (_imageData != null && _imageData.TryGetValue(key, out var images))
+            {
+                var filteredImages = getMainImage
+                    ? images.Where(img => img.Contains("main"))
+                    : images.Where(img => !img.Contains("main"));
+
+                return filteredImages
+                    .Select(img => $"MuseumPictures/{img}")
+                    .ToList();
+            }
+
+            return new List<string>();
+            //if (_imageData != null && _imageData.TryGetValue(key, out var images) && !getMainImage)
+            //{
+            //    return images.Select(img => $"MuseumPictures/{img}").Where(r=>!r.Contains("main")).ToList();
+            //}
+
+            return new List<string>();
+        }
     }
 }
