@@ -19,13 +19,31 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
-		//builder
-		//	.UseMauiApp<App>()
-		//	.ConfigureFonts(fonts =>
-		//	{
-		//		fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-		//		fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-		//	});
+        //builder
+        //	.UseMauiApp<App>()
+        //	.ConfigureFonts(fonts =>
+        //	{
+        //		fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+        //		fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+        //	});
+        //builder.Services.AddMauiBlazorWebView(); // ако го няма вече
+
+        Microsoft.Maui.Handlers.WebViewHandler.Mapper.AppendToMapping("EnableJavaScript", (handler, view) =>
+        {
+#if ANDROID
+            handler.PlatformView.Settings.JavaScriptEnabled = true;
+            handler.PlatformView.Settings.DomStorageEnabled = true;
+            handler.PlatformView.FilterTouchesWhenObscured = true;
+            handler.PlatformView.Settings.AllowFileAccess = true;
+#if DEBUG && ANDROID
+            Android.Webkit.WebView.SetWebContentsDebuggingEnabled(true);
+#endif
+
+            handler.PlatformView.Settings.AllowContentAccess = true;
+            handler.PlatformView.Settings.MixedContentMode = Android.Webkit.MixedContentHandling.AlwaysAllow;
+            handler.PlatformView.SetLayerType(Android.Views.LayerType.Hardware, null);
+#endif
+        });
 
         builder.Services.AddSingleton<MuseumDatabase>(serviceProvider =>
                 new MuseumDatabase(DatabaseConfig.DbPath));  // Път към базата

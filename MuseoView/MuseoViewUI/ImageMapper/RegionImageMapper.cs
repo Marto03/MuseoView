@@ -6,6 +6,8 @@ namespace MuseoViewUI.ImageMapper
     {
 
         private static Dictionary<string, List<string>> _imageData;
+        private static Dictionary<string, string>? _htmlData;
+
         public static Dictionary<int, string> RegionNames { get; set; } = new Dictionary<int, string>
         {
             { 1, "blagoevgrad" },
@@ -67,7 +69,25 @@ namespace MuseoViewUI.ImageMapper
             //    return images.Select(img => $"MuseumPictures/{img}").Where(r=>!r.Contains("main")).ToList();
             //}
 
-            return new List<string>();
+        }
+        public static async Task InitializeHtmlAsync()
+        {
+            if (_htmlData != null) return;
+
+            using var stream = await FileSystem.OpenAppPackageFileAsync("museum_htmls.json");
+            using var reader = new StreamReader(stream);
+            string json = await reader.ReadToEndAsync();
+
+            _htmlData = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+        }
+        public static string? GetHtmlFile(string regionName, int museumId)
+        {
+            string key = $"{regionName}_{museumId}";
+            if (_htmlData != null && _htmlData.TryGetValue(key, out var htmlFileName))
+            {
+                return $"{htmlFileName}";
+            }
+            return null; // ако няма html за този музей
         }
     }
 }

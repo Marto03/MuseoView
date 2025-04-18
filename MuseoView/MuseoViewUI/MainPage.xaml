@@ -9,7 +9,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <ct:InverseBoolConverter x:Key="inverseBoolConverter" />
-            <local:NullToBoolConverter x:Key="NullToBoolConverter"/>
+            <local:NullToBoolConverter x:Key="NullToBoolConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Background>
@@ -41,7 +41,7 @@
                 <!--  Филтри  -->
                 <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
 
-                    <!-- Област -->
+                    <!--  Област  -->
                     <HorizontalStackLayout Spacing="1">
                         <Picker
                             Title="Област"
@@ -50,18 +50,18 @@
                             SelectedItem="{Binding SelectedRegion}"
                             TitleColor="White"
                             WidthRequest="110" />
-                        <Grid WidthRequest="20" HeightRequest="20">
+                        <Grid HeightRequest="20" WidthRequest="20">
                             <ImageButton
-                                Source="close_icon.png"
-                                BackgroundColor="Transparent"
-                                Aspect="AspectFit"
                                 Padding="0"
+                                Aspect="AspectFit"
+                                BackgroundColor="Transparent"
                                 Command="{Binding ClearRegionCommand}"
-                                IsVisible="{Binding SelectedRegion, Converter={StaticResource NullToBoolConverter}}" /> 
+                                IsVisible="{Binding SelectedRegion, Converter={StaticResource NullToBoolConverter}}"
+                                Source="close_icon.png" />
                         </Grid>
                     </HorizontalStackLayout>
 
-                    <!-- Тип музей -->
+                    <!--  Тип музей  -->
                     <HorizontalStackLayout Spacing="1">
                         <Picker
                             Title="Тип музей"
@@ -69,14 +69,14 @@
                             SelectedItem="{Binding SelectedMuseumType}"
                             TitleColor="White"
                             WidthRequest="110" />
-                        <Grid WidthRequest="20" HeightRequest="20">
+                        <Grid HeightRequest="20" WidthRequest="20">
                             <ImageButton
-                                Source="close_icon.png"
-                                BackgroundColor="Transparent"
-                                Aspect="AspectFit"
                                 Padding="0"
+                                Aspect="AspectFit"
+                                BackgroundColor="Transparent"
                                 Command="{Binding ClearMuseumTypeCommand}"
-                                IsVisible="{Binding SelectedMuseumType, Converter={StaticResource NullToBoolConverter}}" />
+                                IsVisible="{Binding SelectedMuseumType, Converter={StaticResource NullToBoolConverter}}"
+                                Source="close_icon.png" />
                         </Grid>
                     </HorizontalStackLayout>
 

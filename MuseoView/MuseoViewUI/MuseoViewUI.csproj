@@ -50,6 +50,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<EmbeddedResource Include="Resources\Raw\streetview.html">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
 	  <MauiImage Include="Resources\Images\MuseumPictures\blagoevgrad_41_1b.jpg" />
 	  <MauiImage Include="Resources\Images\MuseumPictures\blagoevgrad_41_2b.jpg" />
 	  <MauiImage Include="Resources\Images\MuseumPictures\blagoevgrad_41_3b.jpg" />

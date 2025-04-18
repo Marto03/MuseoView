@@ -40,7 +40,7 @@ namespace MuseoViewUI.ViewModels
         private List<MuseumDTO> _allFilteredResults = new(); // пълен филтриран списък
         public bool IsSearchVisible
         {
-            get =>  isSearchVisible;
+            get => isSearchVisible;
             set
             {
                 isSearchVisible = value;
@@ -163,6 +163,7 @@ namespace MuseoViewUI.ViewModels
 
         private async Task NavigateToMuseumByIdAsync(int MuseumId)
         {
+            await MakeVibration();
 
             var viewModel = new MuseumDetailsViewModel(museumDatabaseService);
             await viewModel.LoadMuseumAsync(MuseumId);
@@ -206,6 +207,15 @@ namespace MuseoViewUI.ViewModels
                     FilterResults();
                 }
             }
+        }
+        private async Task MakeVibration()
+        {
+            Vibration.Vibrate(TimeSpan.FromMilliseconds(2000));
+
+            await Task.Delay(150); // стабилно време
+
+            Vibration.Cancel();
+
         }
 
         public ICommand ClearMuseumTypeCommand => new Command(() =>

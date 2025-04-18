@@ -2,9 +2,14 @@
     x:Class="MuseoViewUI.Views.MuseumDetailsView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MuseoViewUI.Converters"
     xmlns:viewmodels="clr-namespace:MuseoViewUI.ViewModels"
     Title="Детайли за музея">
-
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:NullToBoolConverter x:Key="NullToBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Background>
         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
             <GradientStop Offset="0" Color="#0B2943" />
@@ -17,6 +22,7 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="16">
+
             <Image Source="{Binding MainImagePath}" />
 
             <!--  Име на музея  -->
@@ -35,7 +41,7 @@
             <Label
                 FontSize="16"
                 Text="{Binding Museum.Location}"
-                TextColor="White"/>
+                TextColor="White" />
 
             <!--  Регион и Тип (тук могат да се мапнат от ID към име, ако имаш enums)  -->
             <Label
@@ -77,6 +83,12 @@
                     </DataTemplate>
                 </CarouselView.ItemTemplate>
             </CarouselView>
+
+            <WebView
+                x:Name="PanoramaWebView"
+                HeightRequest="500"
+                IsVisible="{Binding PanoramaHtmlPath, Converter={StaticResource NullToBoolConverter}}"
+                Source="{Binding WebViewSource}" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
