@@ -87,7 +87,6 @@
             <WebView
                 x:Name="PanoramaWebView"
                 HeightRequest="500"
-                IsVisible="{Binding PanoramaHtmlPath, Converter={StaticResource NullToBoolConverter}}"
                 Source="{Binding WebViewSource}" />
         </VerticalStackLayout>
     </ScrollView>

@@ -11,6 +11,7 @@ namespace MuseoViewUI.ViewModels
         private readonly IMuseumService museumService;
         private MuseumModel _museum;
         private WebViewSource _webViewSource;
+        private WebViewSource panoramaViewSource;
 
         public MuseumDetailsViewModel(IMuseumService museumService)
         {
@@ -19,6 +20,7 @@ namespace MuseoViewUI.ViewModels
         public string? MainImagePath { get; set; } // трябва да е на латиница започвайки и завършвайки с буква * blagoevgrad_41_1_b   *
         public string? PanoramaHtmlPath { get; set; }
         public ObservableCollection<string> MuseumImages { get; set; } = new();
+        public string MuseumType => Enum.GetName(typeof(MuseumTypeEnum), Museum?.TypeStatusId ?? 0);
         public string RegionName { get; set; }
         public MuseumModel Museum
         {
@@ -39,6 +41,15 @@ namespace MuseoViewUI.ViewModels
                 OnPropertyChanged(nameof(WebViewSource));
             }
         }
+        public WebViewSource PanoramaViewSource
+        {
+            get => panoramaViewSource;
+            set
+            {
+                panoramaViewSource = value;
+                OnPropertyChanged(nameof(PanoramaViewSource));
+            }
+        }
 
 
         public async Task LoadMuseumAsync(int museumId)
@@ -52,7 +63,11 @@ namespace MuseoViewUI.ViewModels
             {
                 Url = $"file:///android_asset/{PanoramaHtmlPath}"
             };
-
+            if (PanoramaHtmlPath == null)
+                WebViewSource = new UrlWebViewSource
+                {
+                    Url = $"file:///android_asset/viewer.html"
+                };
             OnPropertyChanged(nameof(WebViewSource));
         }
         private async Task LoadImagesForMuseum(string regionName, int museumId)

@@ -24,7 +24,7 @@
 <body>
     <div id="viewer">
         <!-- Изображението -->
-        <img id="panorama" src="panorama_view_resized.jpg" alt="Panorama" style="width: 100%; height: auto;">
+        <img id="panorama" src="panorama_view.jpg" alt="Panorama" style="width: 100%; height: auto;">
     </div>
 
     <script>
@@ -42,7 +42,6 @@
             tiltX = beta; // Наклон по X-ос
             tiltY = gamma; // Наклон по Y-ос
 
-            // Нанасяме трансформация на изображението (някои опции може да са нестабилни, така че може да се нуждаеш от тестове)
             image.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
         });
     </script>
