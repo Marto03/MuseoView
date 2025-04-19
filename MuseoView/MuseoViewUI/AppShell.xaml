@@ -6,13 +6,4 @@
     xmlns:local="clr-namespace:MuseoViewUI"
     xmlns:views="clr-namespace:MuseoViewUI.Views"
     Title="MuseoViewUI"
-    Shell.FlyoutBehavior="Disabled">
-
-    <!--<ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />-->
-    <!--<ShellContent
-        ContentTemplate="{DataTemplate views:MuseumDetailsView}" />-->
-
-</Shell>
+    Shell.FlyoutBehavior="Disabled" />

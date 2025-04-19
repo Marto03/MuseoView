@@ -1,11 +1,9 @@
-﻿using Database;
-using Database.Data;
-using Database.Services;
-using Microsoft.Extensions.DependencyInjection;
+﻿using BusinessLayer;
+using BusinessLayer.Interfaces;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Controls.Hosting;
-using Microsoft.Maui.Hosting;
 using MuseoViewUI.ViewModels;
+using MuseoViewUI.Views;
+using Database.Data;
 
 namespace MuseoViewUI;
 
@@ -44,19 +42,18 @@ public static class MauiProgram
             handler.PlatformView.SetLayerType(Android.Views.LayerType.Hardware, null);
 #endif
         });
+        builder.Services.AddSingleton<IMuseumService>(s =>
+        {
+            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "museum.db");
 
-        builder.Services.AddSingleton<MuseumDatabase>(serviceProvider =>
-                new MuseumDatabase(DatabaseConfig.DbPath));  // Път към базата
-
-        builder.Services.AddSingleton<MuseumDatabaseService>();
-
+            // Използваме фабриката от BusinessLayer
+            return MuseumServiceFactory.Create(dbPath);
+        });
         builder.Services.AddSingleton<MuseumSearchViewModel>();  // Регистрираме ViewModel-а
         builder.Services.AddSingleton<MuseumDetailsViewModel>();
 
 
-        builder.Services.AddSingleton<MuseumsByObjectViewModel>();  // Регистрираме ViewModel-а
-
-        builder.Services.AddSingleton<MainPage>();  // Регистрираме MainPage с DI контейнера
+        builder.Services.AddSingleton<MuseumSearchView>();  // Регистрираме MuseumSearchView с DI контейнера
 
         builder.UseMauiApp<App>();  // Настройваме основното приложение
 #if DEBUG

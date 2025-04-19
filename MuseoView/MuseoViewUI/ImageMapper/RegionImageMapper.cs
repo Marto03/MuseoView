@@ -64,11 +64,6 @@ namespace MuseoViewUI.ImageMapper
             }
 
             return new List<string>();
-            //if (_imageData != null && _imageData.TryGetValue(key, out var images) && !getMainImage)
-            //{
-            //    return images.Select(img => $"MuseumPictures/{img}").Where(r=>!r.Contains("main")).ToList();
-            //}
-
         }
         public static async Task InitializeHtmlAsync()
         {

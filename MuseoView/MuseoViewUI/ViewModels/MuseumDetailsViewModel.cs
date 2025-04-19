@@ -1,4 +1,5 @@
-﻿using Database.Data;
+﻿using BusinessLayer.Interfaces;
+using Database.Data;
 using Database.Models;
 using MuseoViewUI.ImageMapper;
 using System.Collections.ObjectModel;
@@ -7,12 +8,18 @@ namespace MuseoViewUI.ViewModels
 {
     public class MuseumDetailsViewModel : BaseViewModel
     {
-        private readonly MuseumDatabase museumService;
+        private readonly IMuseumService museumService;
         private MuseumModel _museum;
         private WebViewSource _webViewSource;
+
+        public MuseumDetailsViewModel(IMuseumService museumService)
+        {
+            this.museumService = museumService;
+        }
         public string? MainImagePath { get; set; } // трябва да е на латиница започвайки и завършвайки с буква * blagoevgrad_41_1_b   *
         public string? PanoramaHtmlPath { get; set; }
-
+        public ObservableCollection<string> MuseumImages { get; set; } = new();
+        public string RegionName { get; set; }
         public MuseumModel Museum
         {
             get => _museum;
@@ -32,24 +39,10 @@ namespace MuseoViewUI.ViewModels
                 OnPropertyChanged(nameof(WebViewSource));
             }
         }
-        public ObservableCollection<string> MuseumImages { get; set; } = new();
-        public string RegionName { get; set; }
-        public string MuseumType => Enum.GetName(typeof(MuseumTypeEnum), Museum?.TypeStatusId ?? 0);
 
-        public MuseumDetailsViewModel(MuseumDatabase museumService)
-        {
-            this.museumService = museumService;
-        }
 
         public async Task LoadMuseumAsync(int museumId)
         {
-            //var firstRegion = RegionImageMapper.RegionNames.First();
-            //string regionSlug = firstRegion.Value;
-            //int regionId = firstRegion.Key;
-            //char regionInitial = regionSlug[0];
-
-            //int maxImages = GetMaxImageIndex(regionSlug, museumId, regionInitial);
-
             _museum = await museumService.GetMuseumByIdAsync(museumId);
             RegionName = await museumService.GetRegionNameByIdAsync(_museum.RegionId);
             await LoadImagesForMuseum(RegionName, museumId);
@@ -82,42 +75,6 @@ namespace MuseoViewUI.ViewModels
                 MuseumImages.Add(img);
 
         }
-
-        //public static int GetMaxImageIndex(string regionName, int museumId, char regionInitial)
-        //{
-        //    string folderPath = Path.Combine("MuseumPictures");
-        //    if (!Directory.Exists(folderPath))
-        //        return 0;
-
-        //    string searchPatternStart = $"{regionName}_{museumId}_";
-        //    string searchPatternEnd = $"{regionInitial}";
-
-        //    int max = 0;
-
-        //    var files = Directory.GetFiles(folderPath);
-        //    foreach (var file in files)
-        //    {
-        //        var fileName = Path.GetFileNameWithoutExtension(file);
-        //        if (fileName.StartsWith(searchPatternStart) && fileName.EndsWith(searchPatternEnd))
-        //        {
-        //            // Пример: blagoevgrad_41_5b => взимаме "5"
-        //            var parts = fileName.Split('_');
-        //            if (parts.Length >= 3)
-        //            {
-        //                string indexPart = parts[2]; // например "5b"
-        //                string numberString = new string(indexPart.TakeWhile(char.IsDigit).ToArray());
-
-        //                if (int.TryParse(numberString, out int number))
-        //                {
-        //                    if (number > max)
-        //                        max = number;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return max;
-        //}
 
     }
 }

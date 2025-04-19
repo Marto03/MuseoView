@@ -3,7 +3,7 @@ using SQLite;
 
 namespace Database.Data.Initialize
 {
-    public static class DatabaseSeeder
+    internal static class DatabaseSeeder
     {
         public static async Task SeedAsync(SQLiteAsyncConnection database)
         {
@@ -516,7 +516,6 @@ namespace Database.Data.Initialize
         }
         private static async Task SeedRegionsAsync(SQLiteAsyncConnection database)
         {
-            //var regionsCount = await database.Table<RegionModel>().CountAsync();
             if (await database.Table<RegionModel>().CountAsync() == 0)
             {
                 var regions = new List<RegionModel>

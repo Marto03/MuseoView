@@ -176,10 +176,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Database\Database.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
+	  <Compile Update="Views\MuseumSearchView.xaml.cs">
+	    <DependentUpon>MuseumSearchView.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\MuseumDetailsView.xaml.cs">
 	    <DependentUpon>MuseumDetailsView.xaml</DependentUpon>
 	  </Compile>
@@ -189,9 +188,6 @@
 	  <MauiXaml Update="SplashPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\MuseumsListView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Views\MuseumDetailsView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -199,6 +195,10 @@
 
 	<ItemGroup>
 	  <Folder Include="Resources\Images\Panoramas\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj" />
 	</ItemGroup>
 
 </Project>

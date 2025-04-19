@@ -1,4 +1,5 @@
-﻿using Database.Data;
+﻿using BusinessLayer.Interfaces;
+using Database.Data;
 using Database.DTOs;
 using MuseoViewUI.Commands;
 using MuseoViewUI.ImageMapper;
@@ -10,34 +11,27 @@ namespace MuseoViewUI.ViewModels
 {
     public class MuseumSearchViewModel : BaseViewModel
     {
-        private readonly MuseumDatabase museumDatabaseService;
+        private readonly IMuseumService museumDatabaseService;
         private string _searchText;
         private RegionDTO _selectedRegion;
-        private string _selectedSearchOption;
         private ObservableCollection<MuseumDTO> _filteredResults;
         private ObservableCollection<RegionDTO> _regions;
         private ObservableCollection<MuseumDTO> _museums;
-        private bool _isMuseumListVisible;
         private bool isSearchVisible;
-        private const int PageSize = 20;
-        private int currentPage = 0;
-        public MuseumSearchViewModel(MuseumDatabase museumDatabaseService)
+        private string _selectedMuseumType;
+
+        public MuseumSearchViewModel(IMuseumService museumDatabaseService)
         {
             this.museumDatabaseService = museumDatabaseService;
-            SearchOptions = new ObservableCollection<string> { "Област", "Музей" };
             Regions = new ObservableCollection<RegionDTO>();
             Museums = new ObservableCollection<MuseumDTO>();
             FilteredResults = new ObservableCollection<MuseumDTO>();
 
-            SelectRegionCommand = new RelayCommand<string>(async region => await LoadMuseums(region));
-            IsMuseumListVisible = false; // Първоначално списъкът с музеи не се вижда.
             ViewMoreCommand = new Command<MuseumDTO>(async (museum) => await NavigateToMuseumByIdAsync(museum.Id));
             ToggleSearchCommand = new Command(ToggleSearch);
-            //LoadNextPageCommand = new Command(async () => await LoadNextPageAsync());
             InitializeAsync(); // Fire and forget
         }
-
-        private List<MuseumDTO> _allFilteredResults = new(); // пълен филтриран списък
+        #region Properties
         public bool IsSearchVisible
         {
             get => isSearchVisible;
@@ -47,154 +41,13 @@ namespace MuseoViewUI.ViewModels
                 OnPropertyChanged();
             }
         }
-        private bool isLoading = false; // За да предотвратим паралелно зареждане
-        //public void LoadNextPage()
-        //{
-        //    // Проверка дали зареждаме в момента, за да не започне ново зареждане, докато старото не е завършено
-        //    if (isLoading)
-        //        return;
-
-        //    isLoading = true; // Започваме зареждането
-
-        //    // Асинхронно зареждаме следващите 20 елемента
-        //    Task.Run(() =>
-        //    {
-        //        var nextItems = _allFilteredResults
-        //            .Skip(currentPage * PageSize)
-        //            .Take(PageSize)
-        //            .ToList();
-
-        //        // За да не блокираме UI нишката, актуализираме ObservableCollection на UI нишката
-
-        //            foreach (var item in nextItems)
-        //            {
-        //                FilteredResults.Add(item);
-        //            }
-
-        //            currentPage++; // Увеличаваме страницата
-        //            isLoading = false; // Зареждането е завършено
-        //    });
-        //}
-        // Метод за зареждане на нови елементи
-        //public async Task LoadNextPageAsync()
-        //{
-        //    if (currentPage * PageSize >= _allFilteredResults.Count)
-        //        return;
-
-        //    var nextItems = _allFilteredResults
-        //        .Skip(currentPage * PageSize)
-        //        .Take(PageSize)
-        //        .ToList();
-
-        //    await Task.Delay(200); // Плавен ефект – махни ако не искаш
-
-        //    foreach (var item in nextItems)
-        //        FilteredResults.Add(item);
-
-        //    currentPage++;
-        //}
         public ICommand ToggleSearchCommand { get; }
         public ICommand ViewMoreCommand { get; }
 
-        //private RegionModel _selectedItem;
-        //public RegionModel SelectedItem
-        //{
-        //    get => _selectedItem;
-        //    set
-        //    {
-        //        if (SetProperty(ref _selectedItem, value) && value != null)
-        //        {
-        //            // Извикваме метода за навигация
-        //            _ = NavigateToMuseumsByRegionAsync(value);
-        //        }
-        //    }
-        //}
-
-        private void ToggleSearch()
-        {
-            IsSearchVisible = !IsSearchVisible;
-        }
-        private object _selectedItem;
-        public object SelectedItem
-        {
-            get => _selectedItem;
-            set
-            {
-                if (SetProperty(ref _selectedItem, value) && value != null)
-                {
-                    if (SelectedSearchOption == "Област" && value is RegionDTO region)
-                    {
-                        _ = NavigateToMuseumsByRegionAsync(region);
-                    }
-                    else if (SelectedSearchOption == "Музей" && value is MuseumDTO museum)
-                    {
-                        _ = NavigateToMuseumByIdAsync(museum.Id);
-                    }
-                }
-            }
-        }
-        private async void NavigateToMuseumById(int MuseumId)
-        {
-
-            var viewModel = new MuseumDetailsViewModel(museumDatabaseService);
-            await viewModel.LoadMuseumAsync(MuseumId);
-            //await viewModel.LoadMuseumsByRegionAsync(region.Id, region.Name);
-
-            var page = new MuseumDetailsView
-            {
-                BindingContext = viewModel
-            };
-
-            await Application.Current.MainPage.Navigation.PushAsync(page);
-        }
-        private async Task NavigateToMuseumsByRegionAsync(RegionDTO region)
-        {
-
-            var viewModel = new MuseumsByObjectViewModel(museumDatabaseService, NavigateToMuseumById);
-            await viewModel.LoadMuseumsByRegionAsync(region.Id, region.Name);
-
-            var page = new MuseumsByObjectView
-            {
-                BindingContext = viewModel
-            };
-
-            await Application.Current.MainPage.Navigation.PushAsync(page);
-        }
-
-        private async Task NavigateToMuseumByIdAsync(int MuseumId)
-        {
-            await MakeVibration();
-
-            var viewModel = new MuseumDetailsViewModel(museumDatabaseService);
-            await viewModel.LoadMuseumAsync(MuseumId);
-            //await viewModel.LoadMuseumsByRegionAsync(region.Id, region.Name);
-
-            var page = new MuseumDetailsView
-            {
-                BindingContext = viewModel
-            };
-
-            await Application.Current.MainPage.Navigation.PushAsync(page);
-        }
 
 
-
-
-
-
-
-        private async Task InitializeAsync()
-        {
-            MuseumTypes = new ObservableCollection<string>(
-                Enum.GetNames(typeof(MuseumTypeEnum))
-            );
-
-            await LoadRegionsFromDatabaseAsync();
-            await LoadMuseums();
-        }
         public ObservableCollection<string> MuseumTypes { get; set; }
 
-        private string _selectedMuseumType;
         public string SelectedMuseumType
         {
             get => _selectedMuseumType;
@@ -208,36 +61,16 @@ namespace MuseoViewUI.ViewModels
                 }
             }
         }
-        private async Task MakeVibration()
-        {
-            Vibration.Vibrate(TimeSpan.FromMilliseconds(2000));
-
-            await Task.Delay(150); // стабилно време
-
-            Vibration.Cancel();
-
-        }
 
         public ICommand ClearMuseumTypeCommand => new Command(() =>
         {
             SelectedMuseumType = null;
         });
-
-        public ObservableCollection<string> SearchOptions { get; set; }
-
-        public string SelectedSearchOption
+        public ICommand ClearRegionCommand => new Command(() =>
         {
-            get => _selectedSearchOption;
-            set
-            {
-                if (_selectedSearchOption != value)
-                {
-                    _selectedSearchOption = value;
-                    OnPropertyChanged();
-                    FilterResults();
-                }
-            }
-        }
+            SelectedRegion = null;
+        });
+
 
         public ObservableCollection<MuseumDTO> FilteredResults
         {
@@ -249,7 +82,6 @@ namespace MuseoViewUI.ViewModels
             }
         }
 
-        private Timer _debounceTimer;
         public string SearchText
         {
             get => _searchText;
@@ -259,8 +91,6 @@ namespace MuseoViewUI.ViewModels
                 {
                     _searchText = value;
                     OnPropertyChanged();
-                    _debounceTimer?.Dispose();
-                    _debounceTimer = new Timer(_ => FilterResults(), null, 300, Timeout.Infinite);
                     FilterResults();
                 }
             }
@@ -300,23 +130,42 @@ namespace MuseoViewUI.ViewModels
             }
         }
 
-        public ICommand ClearRegionCommand => new Command(() =>
-        {
-            SelectedRegion = null;
-        });
 
-        public bool IsMuseumListVisible
+        #endregion
+        #region Private Methods
+        private void ToggleSearch()
         {
-            get => _isMuseumListVisible;
-            set
-            {
-                _isMuseumListVisible = value;
-                OnPropertyChanged();
-            }
+            IsSearchVisible = !IsSearchVisible;
         }
+        private async Task NavigateToMuseumByIdAsync(int MuseumId)
+        {
+            await MakeVibration();
 
-        public ICommand SelectRegionCommand { get; }
+            var viewModel = new MuseumDetailsViewModel(museumDatabaseService);
+            await viewModel.LoadMuseumAsync(MuseumId);
 
+            var page = new MuseumDetailsView
+            {
+                BindingContext = viewModel
+            };
+
+            await Application.Current.MainPage.Navigation.PushAsync(page);
+        }
+        private async Task InitializeAsync()
+        {
+            MuseumTypes = new ObservableCollection<string>(
+                Enum.GetNames(typeof(MuseumTypeEnum))
+            );
+
+            await LoadRegionsFromDatabaseAsync();
+            await LoadMuseums();
+        }
+        private async Task MakeVibration()
+        {
+            Vibration.Vibrate(TimeSpan.FromMilliseconds(2000));
+            await Task.Delay(150); // стабилно време
+            Vibration.Cancel();
+        }
         private async Task LoadRegionsFromDatabaseAsync()
         {
             var allRegions = await museumDatabaseService.GetAllRegionsAsync();
@@ -338,87 +187,6 @@ namespace MuseoViewUI.ViewModels
             }
             FilterResults();
         }
-        private bool _isLoading = false;
-        public bool IsLoading
-        {
-            get => _isLoading;
-            set
-            {
-                _isLoading = value;
-                OnPropertyChanged();
-            }
-        }
-        public ICommand LoadNextPageCommand { get; }
-        public bool CanLoadMore => currentPage * PageSize < _allFilteredResults.Count;
-        public void OnRemainingItemsThresholdReached()
-        {
-            // Проверяваме дали има още елементи за зареждане и дали не зареждаме в момента
-            if (!IsLoading && CanLoadMore)
-            {
-                LoadNextPageCommand.Execute(null); // Зареждаме нови елементи
-            }
-
-        }
-        private CancellationTokenSource _cts;
-        //private async void FilterResults()
-        //{
-        //    IEnumerable<MuseumDTO> filtered = Museums;
-        //    _cts?.Cancel(); // Спира предишното търсене
-        //    _cts = new CancellationTokenSource();
-        //    var token = _cts.Token;
-
-        //    string searchText = SearchText?.ToLower() ?? "";
-        //    string region = SelectedRegion?.Name.ToLower() ?? "";
-        //    string type = SelectedMuseumType?.ToLower() ?? "";
-        //    if (isLoading) return;
-        //    try
-        //    {
-        //        isLoading = true;
-        //        var results = await Task.Run(() =>
-        //        {
-        //            IEnumerable<MuseumDTO> filtered = Museums;
-
-        //            if (!string.IsNullOrWhiteSpace(searchText))
-        //                filtered = filtered.Where(m => m.LowerName.Contains(searchText));
-
-        //            if (!string.IsNullOrWhiteSpace(region))
-        //                filtered = filtered.Where(m => m.LowerRegion == region);
-
-        //            if (!string.IsNullOrWhiteSpace(type))
-        //                filtered = filtered.Where(m => m.LowerMuseumType == type);
-
-        //            return filtered.Take(50).ToList(); // Филтрирай в бекграунд
-        //        }, token);
-
-        //        // Обновяваме UI частта само веднъж:
-        //        FilteredResults = new ObservableCollection<MuseumDTO>(results);
-        //    }
-        //    catch (OperationCanceledException)
-        //    {
-        //        // Игнорирай — предишна заявка е прекъсната
-        //    }
-        //    finally
-        //    {
-        //        isLoading = false;
-        //    }
-        //if (!string.IsNullOrWhiteSpace(SearchText))
-        //{
-        //    filtered = filtered.Where(m => m.Name?.ToLower().Contains(SearchText.ToLower()) == true);
-        //}
-
-        //if (SelectedRegion != null)
-        //{
-        //    filtered = filtered.Where(m => m.RegionName?.ToLower() == SelectedRegion.Name.ToLower());
-        //}
-
-        //if (!string.IsNullOrWhiteSpace(SelectedMuseumType))
-        //{
-        //    filtered = filtered.Where(m => m.MuseumType?.ToLower() == SelectedMuseumType.ToLower());
-        //}
-
-        //FilteredResults = new ObservableCollection<MuseumDTO>(filtered.Take(50)); // без .Take(50)
-        //}
-
         private void FilterResults()
         {
             IEnumerable<MuseumDTO> filtered = Museums;
@@ -438,9 +206,9 @@ namespace MuseoViewUI.ViewModels
                 filtered = filtered.Where(m => m.MuseumType?.ToLower() == SelectedMuseumType.ToLower());
             }
 
-            FilteredResults = new ObservableCollection<MuseumDTO>(filtered); // без .Take(50)
+            FilteredResults = new ObservableCollection<MuseumDTO>(filtered); // .Take(50)
         }
-
+        #endregion
 
     }
 }

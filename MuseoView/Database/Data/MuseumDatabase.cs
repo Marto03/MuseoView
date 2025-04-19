@@ -2,26 +2,26 @@
 using Database.DTOs;
 using Database.Models;
 using SQLite;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("BusinessLayer")]
 namespace Database.Data
 {
-    public class MuseumDatabase
+    internal class MuseumDatabase : IMuseumDatabase
     {
         private readonly SQLiteAsyncConnection _database;
-
         public MuseumDatabase(string dbPath)
         {
             _database = new SQLiteAsyncConnection(dbPath);
-            
-            //DatabaseConfig.CopyDatabaseToDownloads(); --- За копиране на базата в Downloads
-
-            //CreateTablesAsync().Wait();
-            //DatabaseSeeder.SeedAsync(_database).Wait(); // Инициализираме данните
-            //InitializeDatabaseAsync(); // Извикваме асинхронния метод за инициализация
         }
         public async Task InitializeDatabaseAsync()
         {
             await CreateTablesAsync(); // Ще изчакаме таблиците да се създадат
             await DatabaseSeeder.SeedAsync(_database); // Ще изчакаме данните да се инициализират
+        }
+        public async Task InsertAllAsync<T>(IEnumerable<T> items) where T : new()
+        {
+            await _database.InsertAllAsync(items);
         }
         private async Task CreateTablesAsync()
         {
@@ -29,16 +29,10 @@ namespace Database.Data
             {
                 _database.CreateTableAsync<CityModel>(),
                 _database.CreateTableAsync<MuseumModel>(),
-                _database.CreateTableAsync<RegionModel>(),
-                _database.CreateTableAsync<MuseumImageModel>()
+                _database.CreateTableAsync<RegionModel>()
             };
 
             await Task.WhenAll(tasks);
-            //await _database.CreateTableAsync<CityModel>();
-            //await _database.CreateTableAsync<MuseumModel>();
-            //await _database.CreateTableAsync<RegionModel>();
-            //await _database.CreateTableAsync<TypeMuseumModel>();
-            //await _database.CreateTableAsync<MuseumImageModel>();
         }
 
 
@@ -46,14 +40,6 @@ namespace Database.Data
         {
             return await _database.Table<T>().ToListAsync();
         }
-        //public async Task<List<string>> GetAllRegionsAsync()
-        //{
-        //    // Извършваме SQL заявка и връщаме списък от имената на регионите
-        //    var regions = await _database.QueryAsync<RegionModel>("SELECT Name FROM RegionModel");
-
-        //    // Извличаме имената от резултата и ги връщаме като списък от string
-        //    return regions.Select(r => r.Name).ToList();
-        //}
         public async Task<List<RegionDTO>> GetAllRegionsAsync()
         {
             var regions = await _database.Table<RegionModel>().ToListAsync();
@@ -149,10 +135,6 @@ namespace Database.Data
             return null;
         }
 
-        //public Task<List<MuseumModel>> GetMuseumsAsync()
-        //{
-        //    return _database.Table<MuseumModel>().ToListAsync();
-        //}
 
         public Task<int> AddMuseumAsync(MuseumModel museum)
         {
