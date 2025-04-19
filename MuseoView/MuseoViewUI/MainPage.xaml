@@ -31,6 +31,12 @@
                     Text="Museo View"
                     TextColor="White" />
 
+                <!--<WebView
+                    x:Name="PanoramaWebView"
+                    HeightRequest="300"
+                    VerticalOptions="FillAndExpand" />-->
+
+
                 <!--  Карта  -->
                 <Image
                     Margin="-20,0"

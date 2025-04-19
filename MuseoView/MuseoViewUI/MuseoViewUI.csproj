@@ -49,6 +49,10 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
+	<!--<ItemGroup>
+	  <None Remove="Resources\Images\Panoramas\panorama_view.jpg" />
+	</ItemGroup>-->
+
 	<ItemGroup>
 		<EmbeddedResource Include="Resources\Raw\streetview.html">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -191,6 +195,10 @@
 	  <MauiXaml Update="Views\MuseumDetailsView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Resources\Images\Panoramas\" />
 	</ItemGroup>
 
 </Project>

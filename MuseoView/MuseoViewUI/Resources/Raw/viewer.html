@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>360° Panorama with Gyroscope</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+        }
+
+        #viewer {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="viewer">
+        <!-- Изображението -->
+        <img id="panorama" src="panorama_view_resized.jpg" alt="Panorama" style="width: 100%; height: auto;">
+    </div>
+
+    <script>
+        const image = document.getElementById("panorama");
+
+        let tiltX = 0;
+        let tiltY = 0;
+
+        // Слушаме за промени в ориентацията на устройството
+        window.addEventListener("deviceorientation", (event) => {
+            const beta = event.beta; // Наклон по X-ос
+            const gamma = event.gamma; // Наклон по Y-ос
+
+            // Преобразуваме стойностите, за да ги използваме за 3D трансформиране
+            tiltX = beta; // Наклон по X-ос
+            tiltY = gamma; // Наклон по Y-ос
+
+            // Нанасяме трансформация на изображението (някои опции може да са нестабилни, така че може да се нуждаеш от тестове)
+            image.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+        });
+    </script>
+</body>
+</html>
