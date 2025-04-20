@@ -43,7 +43,7 @@
                 Text="{Binding Museum.Location}"
                 TextColor="White" />
 
-            <!--  Регион и Тип (тук могат да се мапнат от ID към име, ако имаш enums)  -->
+            <!--  Регион и Тип  -->
             <Label
                 FontAttributes="Bold"
                 Text="Регион:"

@@ -1,5 +1,4 @@
 ﻿using System.Windows.Input;
-using System;
 
 namespace MuseoViewUI.Commands
 {
@@ -19,7 +18,6 @@ namespace MuseoViewUI.Commands
 
         public event EventHandler? CanExecuteChanged;
 
-        // Премахваме CanExecuteChanged и съответните събития за .NET MAUI
         public bool CanExecute(object parameter)
         {
             return _canExecute == null || _canExecute((T)parameter);

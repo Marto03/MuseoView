@@ -3,7 +3,7 @@ using Database.Models;
 
 namespace Database.Data
 {
-    public interface IMuseumDatabase
+    internal interface IMuseumDatabase
     {
         Task InitializeDatabaseAsync();
         Task<List<T>> GetAllAsync<T>() where T : new();

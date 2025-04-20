@@ -1,7 +1,5 @@
 ﻿using BusinessLayer.Interfaces;
-using Database.Data;
 using Database.DTOs;
-using MuseoViewUI.Commands;
 using MuseoViewUI.ImageMapper;
 using MuseoViewUI.Views;
 using System.Collections.ObjectModel;
@@ -130,7 +128,6 @@ namespace MuseoViewUI.ViewModels
             }
         }
 
-
         #endregion
         #region Private Methods
         private void ToggleSearch()
@@ -173,18 +170,11 @@ namespace MuseoViewUI.ViewModels
             FilterResults();
         }
 
-        private async Task LoadMuseums(string region = null)
+        private async Task LoadMuseums()
         {
-            if (string.IsNullOrEmpty(region))
-            {
-                var allMuseums = await museumDatabaseService.GetAllMuseumNamesAsync(RegionImageMapper.RegionNames);
-                Museums = new ObservableCollection<MuseumDTO>(allMuseums);
-            }
-            else
-            {
-                var museums = await museumDatabaseService.GetAllMuseumNamesAsync(RegionImageMapper.RegionNames);
-                Museums = new ObservableCollection<MuseumDTO>(museums);
-            }
+            var allMuseums = await museumDatabaseService.GetAllMuseumNamesAsync(RegionImageMapper.RegionNames);
+            Museums = new ObservableCollection<MuseumDTO>(allMuseums);
+
             FilterResults();
         }
         private void FilterResults()

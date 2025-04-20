@@ -42,7 +42,6 @@ namespace MuseoViewUI.ImageMapper
         public static async Task InitializeAsync()
         {
             if (_imageData != null) return;
-            var test = FileSystem.OpenAppPackageFileAsync("museum_images.json");
             using var stream = await FileSystem.OpenAppPackageFileAsync("museum_images.json");
             using var reader = new StreamReader(stream);
             string json = await reader.ReadToEndAsync();

@@ -31,12 +31,6 @@
                     Text="Museo View"
                     TextColor="White" />
 
-                <!--<WebView
-                    x:Name="PanoramaWebView"
-                    HeightRequest="300"
-                    VerticalOptions="FillAndExpand" />-->
-
-
                 <!--  Карта  -->
                 <Image
                     Margin="-20,0"
@@ -164,20 +158,18 @@
                                             Aspect="AspectFit"
                                             HeightRequest="80"
                                             Source="{Binding MainImagePath}"
-                                            VerticalOptions="Start"
+                                            VerticalOptions="Center"
                                             WidthRequest="80" />
 
                                         <!--  Текстова информация  -->
-                                        <VerticalStackLayout VerticalOptions="Center">
-                                            <Label
-                                                FontAttributes="Bold"
-                                                FontSize="16"
-                                                LineBreakMode="WordWrap"
-                                                MaxLines="2"
-                                                Text="{Binding Name}"
-                                                TextColor="Black"
-                                                VerticalOptions="Start" />
-                                        </VerticalStackLayout>
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="16"
+                                            LineBreakMode="WordWrap"
+                                            MaxLines="2"
+                                            Text="{Binding Name}"
+                                            TextColor="Black"
+                                            VerticalOptions="Center" />
                                     </HorizontalStackLayout>
                                 </Grid>
                             </Frame>
@@ -186,7 +178,6 @@
                 </CollectionView>
             </VerticalStackLayout>
         </ScrollView>
-
 
     </Grid>
 </ContentPage>

@@ -20,20 +20,5 @@ namespace Database.Models
         public string Location { get; set; }
         public string OpeningHours { get; set; } // работно време
 
-
-
-        //public int Images { get; set; }
-        //public string MainImagePath
-        //{
-        //    get
-        //    {
-        //        // Пример: "sofia_3_main.jpg"
-        //        return $"MuseumPictures/{Region.Name}_{Id}_main.jpg";
-        //    }
-        //}
-
-        //public string VirtualTourUrl { get; set; }
-        //public string StatusId { get; set; } // дали е в ремонт или е активен.
-
     }
 }

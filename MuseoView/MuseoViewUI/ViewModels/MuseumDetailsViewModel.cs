@@ -1,5 +1,4 @@
 ﻿using BusinessLayer.Interfaces;
-using Database.Data;
 using Database.Models;
 using MuseoViewUI.ImageMapper;
 using System.Collections.ObjectModel;
@@ -51,7 +50,6 @@ namespace MuseoViewUI.ViewModels
             }
         }
 
-
         public async Task LoadMuseumAsync(int museumId)
         {
             _museum = await museumService.GetMuseumByIdAsync(museumId);
@@ -81,14 +79,12 @@ namespace MuseoViewUI.ViewModels
                 // Зареждаш във WebView или подобен контрол
                 PanoramaHtmlPath = htmlPath;
 
-
             OnPropertyChanged(nameof(PanoramaHtmlPath));
             MainImagePath = mainImage?.FirstOrDefault() ?? null;
             OnPropertyChanged(nameof(MainImagePath));
             MuseumImages.Clear();
             foreach (var img in images)
                 MuseumImages.Add(img);
-
         }
 
     }

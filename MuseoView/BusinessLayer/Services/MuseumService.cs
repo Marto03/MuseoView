@@ -7,9 +7,9 @@ namespace BusinessLayer.Services
 {
     internal class MuseumService : IMuseumService
     {
-        private readonly MuseumDatabase _db;
+        private readonly IMuseumDatabase _db;
 
-        public MuseumService(MuseumDatabase db)
+        public MuseumService(IMuseumDatabase db)
         {
             _db = db;
         }
